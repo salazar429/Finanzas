@@ -2,12 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Finanzas PWA - Instalación Forzada</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas - Instalación Directa</title>
     
-    <!-- Manifest necesario para PWA -->
+    <!-- MANIFEST - Obligatorio para PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4F46E5">
+    
+    <!-- Iconos para iOS -->
+    <link rel="apple-touch-icon" href="icon-192.png">
     
     <style>
         * {
@@ -39,60 +42,34 @@
             color: #4F46E5;
             text-align: center;
             margin-bottom: 20px;
-            font-size: 24px;
         }
 
-        /* ===== BOTÓN DE INSTALACIÓN ===== */
-        .install-section {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            text-align: center;
+        /* BOTÓN DE INSTALACIÓN - Único y directo */
+        #installBtn {
+            background: linear-gradient(135deg, #FF416C, #FF4B2B);
             color: white;
-        }
-
-        .install-title {
-            font-size: 18px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .install-btn {
-            background: white;
-            color: #4F46E5;
             border: none;
-            padding: 20px 30px;
+            padding: 20px;
             border-radius: 60px;
             font-size: 22px;
             font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
             width: 100%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255,65,108,0.4);
             transition: all 0.3s;
-            border: 3px solid #FFD700;
+            border: 2px solid white;
         }
 
-        .install-btn:active {
+        #installBtn:active {
             transform: scale(0.95);
-            background: #f0f0f0;
         }
 
-        .install-icon {
-            font-size: 32px;
+        #installBtn.instalado {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            cursor: default;
         }
 
-        .install-subtitle {
-            margin-top: 15px;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        /* Inputs y demás */
         .input-group {
             margin-bottom: 15px;
         }
@@ -112,11 +89,6 @@
             font-size: 16px;
         }
 
-        .input-group input:focus {
-            outline: none;
-            border-color: #4F46E5;
-        }
-
         .calc-btn {
             width: 100%;
             background: linear-gradient(135deg, #4F46E5, #7C3AED);
@@ -130,6 +102,17 @@
             margin-bottom: 20px;
         }
 
+        .total {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -138,16 +121,16 @@
         }
 
         .stat-card {
-            background: #f8f9ff;
             padding: 15px;
             border-radius: 15px;
             text-align: center;
+            color: white;
         }
 
-        .stat-card.dios { background: linear-gradient(135deg, #FFD700, #FFA500); color: white; }
-        .stat-card.gastos { background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; }
-        .stat-card.reinversion { background: linear-gradient(135deg, #4F46E5, #7C3AED); color: white; }
-        .stat-card.ahorro { background: linear-gradient(135deg, #00B894, #00A884); color: white; }
+        .dios { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .gastos { background: linear-gradient(135deg, #FF6B6B, #FF4757); }
+        .reinversion { background: linear-gradient(135deg, #4F46E5, #7C3AED); }
+        .ahorro { background: linear-gradient(135deg, #00B894, #00A884); }
 
         .stat-value {
             font-size: 20px;
@@ -155,18 +138,7 @@
             margin: 5px 0;
         }
 
-        .total {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .history {
+        .historial {
             background: #f8f9ff;
             border-radius: 15px;
             padding: 15px;
@@ -174,7 +146,7 @@
             overflow-y: auto;
         }
 
-        .history-item {
+        .historial-item {
             background: white;
             padding: 10px;
             border-radius: 10px;
@@ -189,16 +161,16 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #333;
+            background: #4F46E5;
             color: white;
-            padding: 15px 25px;
+            padding: 15px 30px;
             border-radius: 30px;
             font-weight: bold;
             z-index: 1000;
-            animation: slideUp 0.3s;
+            animation: subir 0.3s;
         }
 
-        @keyframes slideUp {
+        @keyframes subir {
             from { transform: translate(-50%, 20px); opacity: 0; }
             to { transform: translate(-50%, 0); opacity: 1; }
         }
@@ -206,29 +178,19 @@
 </head>
 <body>
     <div class="app-container">
-        <h1>💰 Calculadora Financiera</h1>
+        <h1>💰 Finanzas 10-50-30-20</h1>
         
-        <!-- ===== BOTÓN DE INSTALACIÓN ===== -->
-        <div class="install-section">
-            <div class="install-title">📲 INSTALAR APLICACIÓN</div>
-            <button class="install-btn" onclick="forzarInstalacion()">
-                <span class="install-icon">📥</span>
-                TOCA AQUÍ PARA INSTALAR
-                <span class="install-icon">👇</span>
-            </button>
-            <div class="install-subtitle">
-                Funciona sin internet después de instalar
-            </div>
+        <!-- ÚNICO BOTÓN - HACE LA INSTALACIÓN DIRECTA -->
+        <button id="installBtn">📲 INSTALAR APP AHORA</button>
+        
+        <div class="input-group">
+            <label>📌 Concepto</label>
+            <input type="text" id="nombre" placeholder="Ej: Salario mensual">
         </div>
         
         <div class="input-group">
-            <label>📌 Nombre</label>
-            <input type="text" id="nombre" placeholder="Ej: Salario">
-        </div>
-        
-        <div class="input-group">
-            <label>💰 Cantidad</label>
-            <input type="number" id="cantidad" placeholder="0.00">
+            <label>💰 Cantidad ($)</label>
+            <input type="number" id="cantidad" placeholder="0.00" step="0.01">
         </div>
         
         <button class="calc-btn" onclick="calcular()">CALCULAR</button>
@@ -237,109 +199,105 @@
         
         <div class="stats">
             <div class="stat-card dios">
-                <div>🙏 Dios</div>
+                <div>🙏 Dios (10%)</div>
                 <div class="stat-value" id="dios">$0</div>
-                <div>10%</div>
             </div>
             <div class="stat-card gastos">
-                <div>🏠 Gastos</div>
+                <div>🏠 Gastos (50%)</div>
                 <div class="stat-value" id="gastos">$0</div>
-                <div>50%</div>
             </div>
             <div class="stat-card reinversion">
-                <div>📈 Reinversión</div>
+                <div>📈 Reinversión (30%)</div>
                 <div class="stat-value" id="reinversion">$0</div>
-                <div>30%</div>
             </div>
             <div class="stat-card ahorro">
-                <div>🏦 Ahorro</div>
+                <div>🏦 Ahorro (20%)</div>
                 <div class="stat-value" id="ahorro">$0</div>
-                <div>20%</div>
             </div>
         </div>
         
         <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button style="flex:1; padding:10px; background:#FFD700; border:none; border-radius:10px;" onclick="mostrarFavoritos()">⭐ Favoritos</button>
-            <button style="flex:1; padding:10px; background:#ff4444; color:white; border:none; border-radius:10px;" onclick="borrarHistorial()">🗑️ Borrar</button>
+            <button style="flex:1; padding:12px; background:#FFD700; border:none; border-radius:12px; font-weight:bold;" onclick="mostrarFavoritos()">⭐ FAVORITOS</button>
+            <button style="flex:1; padding:12px; background:#ff4444; color:white; border:none; border-radius:12px; font-weight:bold;" onclick="borrarHistorial()">🗑️ BORRAR</button>
         </div>
         
-        <div class="history" id="historial"></div>
-        <div style="text-align:center; margin-top:10px; color:#666; font-size:12px;">⭐ Favoritos permanecen</div>
+        <div class="historial" id="historial"></div>
+        <div style="text-align:center; margin-top:10px; color:#666; font-size:12px;">⭐ Los favoritos nunca se borran</div>
     </div>
 
     <script>
-        // ===== VARIABLES =====
-        let historial = [];
-        let favoritos = new Set();
+        // ===== VARIABLES PARA INSTALACIÓN =====
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
         
-        // ===== FUNCIÓN QUE FUERZA LA INSTALACIÓN =====
-        function forzarInstalacion() {
-            mostrarToast('📲 PREPARANDO INSTALACIÓN...');
-            
-            // MÉTODO 1: Intentar con beforeinstallprompt (estándar PWA)
-            if (window.deferredPrompt) {
-                window.deferredPrompt.prompt();
-                window.deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        mostrarToast('✅ App instalada correctamente');
-                        document.querySelector('.install-btn').innerHTML = '✓ APP INSTALADA ✓';
-                    } else {
-                        mostrarToast('❌ Instalación cancelada');
-                    }
-                    window.deferredPrompt = null;
-                });
-                return;
-            }
-            
-            // MÉTODO 2: Forzar instalación en Android
-            if (navigator.userAgent.match(/Android/i)) {
-                mostrarToast('📱 Abriendo menú de instalación...');
-                setTimeout(() => {
-                    if (confirm('¿Quieres instalar esta app?\n\nPresiona OK y luego busca "Instalar aplicación" en el menú ⋮')) {
-                        // Intentar abrir el menú de Chrome
-                        window.location.href = 'chrome://flags/#bypass-app-banner-engagement-checks';
-                        setTimeout(() => {
-                            mostrarToast('🔍 Busca "Instalar aplicación" en el menú ⋮');
-                        }, 1000);
-                    }
-                }, 500);
-                return;
-            }
-            
-            // MÉTODO 3: iOS - Instrucciones claras
-            if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-                mostrarToast('📱 SIGUE ESTOS PASOS:');
-                setTimeout(() => {
-                    alert('📲 PARA INSTALAR EN iPhone:\n\n1. Toca el botón Compartir 📤\n2. Desliza hacia abajo\n3. Toca "Agregar a Pantalla de Inicio"\n4. Confirma con "Agregar"');
-                }, 500);
-                return;
-            }
-            
-            // MÉTODO 4: PC / Otros
-            mostrarToast('💻 Busca el icono de instalación en la barra de direcciones');
-        }
-
-        // ===== CAPTURAR EL EVENTO DE INSTALACIÓN =====
+        // ===== CAPTURAR EL EVENTO DE INSTALACIÓN (OBLIGATORIO) =====
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
-            window.deferredPrompt = e;
+            deferredPrompt = e; // Guardamos el evento para usarlo después
             console.log('✅ App lista para instalar');
+            
+            // El botón YA ESTÁ VISIBLE, no lo ocultamos nunca
         });
 
-        // ===== REGISTRAR SERVICE WORKER =====
+        // ===== BOTÓN QUE INSTALA DIRECTAMENTE =====
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                // Si no hay evento, mostramos mensaje pero NO instrucciones
+                mostrarToast('⚠️ Cargando... intenta de nuevo en 2 segundos');
+                
+                // Forzamos recarga del evento
+                setTimeout(() => {
+                    if (deferredPrompt) {
+                        installBtn.click(); // Auto-click
+                    }
+                }, 2000);
+                return;
+            }
+            
+            // MOSTRAMOS EL DIÁLOGO DE INSTALACIÓN DEL NAVEGADOR
+            deferredPrompt.prompt();
+            
+            // Esperamos la respuesta del usuario
+            const { outcome } = await deferredPrompt.userChoice;
+            
+            if (outcome === 'accepted') {
+                mostrarToast('✅ App instalada correctamente');
+                installBtn.textContent = '✓ APP INSTALADA';
+                installBtn.classList.add('instalado');
+                installBtn.disabled = true;
+            } else {
+                mostrarToast('❌ Instalación cancelada');
+            }
+            
+            deferredPrompt = null; // Limpiamos
+        });
+
+        // ===== DETECTAR SI YA ESTÁ INSTALADA =====
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            installBtn.textContent = '✓ APP INSTALADA';
+            installBtn.classList.add('instalado');
+            installBtn.disabled = true;
+        }
+
+        // ===== REGISTRAR SERVICE WORKER (NECESARIO PARA PWA) =====
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(() => console.log('✅ Service Worker listo'))
-                .catch(err => console.log('❌ Error:', err));
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(() => console.log('✅ Service Worker OK'))
+                    .catch(err => console.log('❌ Service Worker error:', err));
+            });
         }
 
         // ===== FUNCIONES DE LA APP =====
-        function mostrarToast(mensaje) {
+        let historial = [];
+        let favoritos = new Set();
+
+        function mostrarToast(msg) {
             const toast = document.createElement('div');
             toast.className = 'toast';
-            toast.textContent = mensaje;
+            toast.textContent = msg;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => toast.remove(), 2000);
         }
 
         function calcular() {
@@ -352,10 +310,10 @@
             }
             
             const dios = cantidad * 0.10;
-            const restante = cantidad - dios;
-            const gastos = restante * 0.50;
-            const reinversion = restante * 0.30;
-            const ahorro = restante * 0.20;
+            const resto = cantidad - dios;
+            const gastos = resto * 0.50;
+            const reinversion = resto * 0.30;
+            const ahorro = resto * 0.20;
             
             document.getElementById('total').textContent = `$${cantidad.toFixed(2)}`;
             document.getElementById('dios').textContent = `$${dios.toFixed(2)}`;
@@ -378,14 +336,14 @@
         }
 
         function actualizarHistorial() {
-            const lista = document.getElementById('historial');
+            const div = document.getElementById('historial');
             if (historial.length === 0) {
-                lista.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">✨ Sin cálculos</div>';
+                div.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">✨ Sin cálculos</div>';
                 return;
             }
             
-            lista.innerHTML = historial.map(item => `
-                <div class="history-item" style="${favoritos.has(item.id) ? 'background:#fff9e6;' : ''}">
+            div.innerHTML = historial.map(item => `
+                <div class="historial-item" style="${favoritos.has(item.id) ? 'background:#fff9e6;' : ''}">
                     <div>
                         <strong>${item.nombre}</strong><br>
                         <small>${item.fecha}</small>
@@ -411,15 +369,15 @@
         }
 
         function mostrarFavoritos() {
-            const favoritosArray = historial.filter(item => favoritos.has(item.id));
-            if (favoritosArray.length === 0) {
-                alert('⭐ No hay favoritos');
+            const favs = historial.filter(item => favoritos.has(item.id));
+            if (favs.length === 0) {
+                alert('No hay favoritos');
                 return;
             }
             
-            const lista = document.getElementById('historial');
-            lista.innerHTML = favoritosArray.map(item => `
-                <div class="history-item" style="background:#fff9e6;">
+            const div = document.getElementById('historial');
+            div.innerHTML = favs.map(item => `
+                <div class="historial-item" style="background:#fff9e6;">
                     <div>
                         <strong>${item.nombre}</strong><br>
                         <small>${item.fecha}</small>
