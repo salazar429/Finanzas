@@ -1,9 +1,16 @@
 const CACHE_NAME = 'finanzas-pwa-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap'
+  '/Finanzas/',
+  '/Finanzas/index.html',
+  '/Finanzas/manifest.json',
+  '/Finanzas/icons/icon-72x72.png',
+  '/Finanzas/icons/icon-96x96.png',
+  '/Finanzas/icons/icon-128x128.png',
+  '/Finanzas/icons/icon-144x144.png',
+  '/Finanzas/icons/icon-152x152.png',
+  '/Finanzas/icons/icon-192x192.png',
+  '/Finanzas/icons/icon-384x384.png',
+  '/Finanzas/icons/icon-512x512.png'
 ];
 
 // Instalación del Service Worker
@@ -43,22 +50,18 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Si está en caché, devolver desde caché
         if (response) {
           console.log('✅ Desde caché:', event.request.url);
           return response;
         }
 
-        // Si no está en caché, buscar en red
         console.log('🌐 Desde red:', event.request.url);
         return fetch(event.request)
           .then(response => {
-            // Verificar si es una respuesta válida
             if(!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
 
-            // Clonar la respuesta para guardarla en caché
             const responseToCache = response.clone();
             caches.open(CACHE_NAME)
               .then(cache => {
@@ -69,16 +72,7 @@ self.addEventListener('fetch', event => {
           })
           .catch(error => {
             console.log('❌ Error en fetch:', error);
-            // Aquí podrías devolver una página de fallback
           });
       })
   );
-});
-
-// Manejar sincronización en segundo plano (opcional)
-self.addEventListener('sync', event => {
-  if (event.tag === 'sync-data') {
-    console.log('🔄 Sincronizando datos...');
-    // Aquí iría la lógica de sincronización
-  }
 });
