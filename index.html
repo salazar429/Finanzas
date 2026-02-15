@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Finanzas PWA - 10% Dios • 50/30/20</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
     <meta name="theme-color" content="#4F46E5">
     <style>
+        /* Mismos estilos que antes... */
         * {
             margin: 0;
             padding: 0;
@@ -37,6 +38,7 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.25);
             animation: slideUp 0.4s ease;
             margin: auto;
+            position: relative;
         }
 
         @keyframes slideUp {
@@ -60,11 +62,64 @@
             flex-wrap: wrap;
         }
 
+        .install-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .install-btn {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
+            transition: all 0.3s;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .install-btn:active {
+            transform: scale(0.95);
+        }
+
+        .install-btn.hidden {
+            display: none;
+        }
+
+        .offline-badge {
+            background: #ff4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            margin-left: 8px;
+        }
+
+        .online-badge {
+            background: #00C851;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            margin-left: 8px;
+        }
+
         .subtitle {
             color: #666;
             margin-bottom: 18px;
             font-size: clamp(12px, 3.5vw, 14px);
             line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .input-section {
@@ -73,10 +128,6 @@
             border-radius: 20px;
             margin-bottom: 20px;
             transition: all 0.3s ease;
-        }
-
-        .input-section:has(input:focus) {
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
         }
 
         .input-group {
@@ -551,7 +602,15 @@
     <div class="app-container">
         <h1>
             <span>💰</span> Calculadora Financiera
+            <span id="connectionStatus" class="online-badge">📶 Online</span>
         </h1>
+        
+        <div class="install-btn-container">
+            <button id="installButton" class="install-btn hidden">
+                <span>📲</span> Instalar App
+            </button>
+        </div>
+        
         <div class="subtitle">
             🙏 10% Dios | 🏠 50% Gastos | 📈 30% Reinversión | 🏦 20% Ahorro
         </div>
@@ -629,7 +688,7 @@
         </div>
 
         <div class="footer">
-            ⭐ Favoritos permanecen • Los campos se limpian automáticamente
+            ⭐ Favoritos permanecen • Funciona sin internet • 📲 Toca "Instalar" para usar offline
         </div>
     </div>
 
@@ -645,6 +704,65 @@
             reinversion: 0,
             ahorro: 0
         };
+
+        // Variables para PWA
+        let deferredPrompt;
+        const installButton = document.getElementById('installButton');
+        const connectionStatus = document.getElementById('connectionStatus');
+
+        // Detectar conexión
+        function updateConnectionStatus() {
+            if (navigator.onLine) {
+                connectionStatus.textContent = '📶 Online';
+                connectionStatus.className = 'online-badge';
+            } else {
+                connectionStatus.textContent = '📴 Offline';
+                connectionStatus.className = 'offline-badge';
+            }
+        }
+
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        updateConnectionStatus();
+
+        // Evento para instalar PWA
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installButton.classList.remove('hidden');
+        });
+
+        installButton.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                showToast('❌ Ya está instalada o no es compatible');
+                return;
+            }
+            
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            
+            if (outcome === 'accepted') {
+                showToast('✅ App instalada correctamente');
+                installButton.classList.add('hidden');
+            }
+            
+            deferredPrompt = null;
+        });
+
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registrado:', registration.scope);
+                        showToast('✅ App lista para usar offline');
+                    })
+                    .catch(error => {
+                        console.log('❌ Error al registrar Service Worker:', error);
+                        showToast('⚠️ Modo offline no disponible');
+                    });
+            });
+        }
 
         // Cargar datos al iniciar
         document.addEventListener('DOMContentLoaded', () => {
