@@ -1,58 +1,58 @@
 {
-  "name": "Calculadora Financiera 10-50-30-20",
-  "short_name": "Finanzas PWA",
+  "name": "Calculadora Financiera",
+  "short_name": "Finanzas",
   "description": "Calcula la distribución de tus ingresos: 10% Dios, 50% Gastos, 30% Reinversión, 20% Ahorro",
-  "start_url": "/",
+  "start_url": "/Finanzas/",
   "display": "standalone",
   "background_color": "#4F46E5",
   "theme_color": "#4F46E5",
   "orientation": "portrait",
-  "scope": "/",
+  "scope": "/Finanzas/",
   "icons": [
     {
-      "src": "icons/icon-72.png",
+      "src": "icons/icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-96.png",
+      "src": "icons/icon-96x96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-128.png",
+      "src": "icons/icon-128x128.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-144.png",
+      "src": "icons/icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-152.png",
+      "src": "icons/icon-152x152.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-192.png",
+      "src": "icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-384.png",
+      "src": "icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
