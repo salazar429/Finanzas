@@ -1,16 +1,19 @@
 {
-  "name": "Calculadora Financiera",
+  "name": "Calculadora Financiera 10-50-30-20",
   "short_name": "Finanzas",
-  "description": "Calcula 10% Dios, 50% Gastos, 30% Reinversión, 20% Ahorro",
+  "description": "Calcula distribución de ingresos: 10% Dios, 50% Gastos, 30% Reinversión, 20% Ahorro",
   "start_url": "/Finanzas/",
   "display": "standalone",
   "background_color": "#4F46E5",
   "theme_color": "#4F46E5",
+  "orientation": "portrait",
+  "scope": "/Finanzas/",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
