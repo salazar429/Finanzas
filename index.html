@@ -2,765 +2,456 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Finanzas PWA - 10% Dios • 50/30/20</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Finanzas PWA - Instalación Forzada</title>
     
-    <!-- Archivos PWA -->
+    <!-- Manifest necesario para PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4F46E5">
-    
-    <!-- Iconos para iOS -->
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
     
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: Arial, sans-serif;
         }
 
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 12px;
+            padding: 15px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
         }
 
         .app-container {
             max-width: 450px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 28px;
-            padding: 18px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-            animation: slideUp 0.4s ease;
-            margin: auto;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            background: white;
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         }
 
         h1 {
             color: #4F46E5;
-            font-size: clamp(20px, 6vw, 24px);
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
         }
 
-        /* ===== BOTÓN DE INSTALACIÓN ÚNICO ===== */
-        .install-btn-container {
-            margin: 15px 0;
-        }
-
-        #installButton {
-            background: linear-gradient(135deg, #FF416C, #FF4B2B);
+        /* ===== BOTÓN DE INSTALACIÓN ===== */
+        .install-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
             color: white;
-            border: none;
-            padding: 18px 20px;
-            border-radius: 50px;
+        }
+
+        .install-title {
             font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .install-btn {
+            background: white;
+            color: #4F46E5;
+            border: none;
+            padding: 20px 30px;
+            border-radius: 60px;
+            font-size: 22px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
-            transition: all 0.3s;
+            gap: 15px;
             width: 100%;
-            animation: pulse-install 2s infinite;
-            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            border: 3px solid #FFD700;
         }
 
-        @keyframes pulse-install {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
-            }
-            50% {
-                transform: scale(1.02);
-                box-shadow: 0 12px 30px rgba(255, 65, 108, 0.6);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
-            }
+        .install-btn:active {
+            transform: scale(0.95);
+            background: #f0f0f0;
         }
 
-        #installButton:active {
-            transform: scale(0.98);
+        .install-icon {
+            font-size: 32px;
         }
 
-        #installButton.installed {
-            background: linear-gradient(135deg, #00b09b, #96c93d);
-            animation: none;
-            box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
+        .install-subtitle {
+            margin-top: 15px;
+            font-size: 14px;
+            opacity: 0.9;
         }
 
-        .offline-badge, .online-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            margin-left: 8px;
-        }
-
-        .online-badge {
-            background: #00C851;
-            color: white;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 18px;
-            font-size: clamp(12px, 3.5vw, 14px);
-            line-height: 1.4;
-            text-align: center;
-        }
-
-        .input-section {
-            background: #f8f9ff;
-            padding: 16px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-        }
-
+        /* Inputs y demás */
         .input-group {
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
 
         .input-group label {
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             color: #4F46E5;
-            font-weight: 600;
-            font-size: clamp(12px, 3.5vw, 14px);
+            font-weight: bold;
         }
 
         .input-group input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 16px;
+            border-radius: 15px;
             font-size: 16px;
-            transition: all 0.2s;
-            background: white;
         }
 
         .input-group input:focus {
             outline: none;
             border-color: #4F46E5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
-        .input-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .add-btn, .clear-inputs-btn {
-            flex: 1;
-            padding: 16px;
-            border-radius: 16px;
-            font-size: clamp(14px, 4vw, 16px);
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            border: none;
-        }
-
-        .add-btn {
+        .calc-btn {
+            width: 100%;
             background: linear-gradient(135deg, #4F46E5, #7C3AED);
             color: white;
-            flex: 2;
-        }
-
-        .clear-inputs-btn {
-            background: #f0f0f0;
-            color: #666;
-            flex: 1;
-        }
-
-        .add-btn:active {
-            transform: scale(0.98);
-        }
-
-        .total-section {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 16px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .total-label {
-            font-size: clamp(13px, 4vw, 15px);
-            opacity: 0.9;
-        }
-
-        .total-value {
-            font-size: clamp(28px, 8vw, 36px);
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 18px;
             font-weight: bold;
-            margin-top: 4px;
-            word-break: break-word;
+            cursor: pointer;
+            margin-bottom: 20px;
         }
 
-        .stats-grid {
+        .stats {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
             margin-bottom: 20px;
         }
 
         .stat-card {
-            background: white;
-            padding: 14px 10px;
-            border-radius: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            min-height: 90px;
-            display: flex;
-            flex-direction: column;
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
         }
 
-        .stat-card.dios {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            color: white;
-        }
-
-        .stat-card.gastos {
-            background: linear-gradient(135deg, #FF6B6B, #FF4757);
-            color: white;
-        }
-
-        .stat-card.reinversion {
-            background: linear-gradient(135deg, #4F46E5, #7C3AED);
-            color: white;
-        }
-
-        .stat-card.ahorro {
-            background: linear-gradient(135deg, #00B894, #00A884);
-            color: white;
-        }
-
-        .stat-label {
-            font-size: clamp(11px, 3vw, 13px);
-            opacity: 0.9;
-            margin-bottom: 4px;
-        }
+        .stat-card.dios { background: linear-gradient(135deg, #FFD700, #FFA500); color: white; }
+        .stat-card.gastos { background: linear-gradient(135deg, #FF6B6B, #FF4757); color: white; }
+        .stat-card.reinversion { background: linear-gradient(135deg, #4F46E5, #7C3AED); color: white; }
+        .stat-card.ahorro { background: linear-gradient(135deg, #00B894, #00A884); color: white; }
 
         .stat-value {
-            font-size: clamp(16px, 5vw, 22px);
+            font-size: 20px;
             font-weight: bold;
-            margin-bottom: 3px;
+            margin: 5px 0;
         }
 
-        .stat-sub {
-            font-size: clamp(9px, 2.5vw, 11px);
-            opacity: 0.8;
-            margin-top: auto;
-        }
-
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .history-title {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #4F46E5;
-            font-weight: bold;
-            font-size: clamp(14px, 4vw, 16px);
-        }
-
-        .history-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .icon-btn {
-            background: #f0f0f0;
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 22px;
-        }
-
-        .icon-btn.favorite {
-            background: #FFD700;
+        .total {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
         }
 
-        .history-list {
+        .history {
             background: #f8f9ff;
-            border-radius: 20px;
-            padding: 12px;
-            max-height: 280px;
+            border-radius: 15px;
+            padding: 15px;
+            max-height: 200px;
             overflow-y: auto;
         }
 
         .history-item {
             background: white;
-            padding: 14px;
-            border-radius: 16px;
-            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-left: 5px solid #4F46E5;
-            cursor: pointer;
+            border-left: 4px solid #4F46E5;
         }
 
-        .history-item.favorite {
-            border-left-color: #FFD700;
-            background: #fff9e6;
-        }
-
-        .history-item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .history-item-info h4 {
-            color: #333;
-            font-size: clamp(14px, 4vw, 16px);
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .history-item-info p {
-            color: #666;
-            font-size: clamp(10px, 3vw, 11px);
-        }
-
-        .history-item-amount {
-            font-weight: bold;
-            color: #4F46E5;
-            font-size: clamp(14px, 4vw, 16px);
-            white-space: nowrap;
-        }
-
-        .history-item-actions {
-            display: flex;
-            gap: 4px;
-        }
-
-        .fav-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #FFD700;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        .empty-history {
-            text-align: center;
-            color: #999;
-            padding: 30px 15px;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 16px;
-            color: #666;
-            font-size: clamp(10px, 3vw, 11px);
-        }
-
-        .current-calculation {
-            background: linear-gradient(135deg, #e8f4fd, #dbeafe);
-            padding: 12px 15px;
-            border-radius: 16px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            color: #0369a1;
-            border: 1px solid #bae6fd;
-        }
-
-        .reset-btn {
-            background: #ff4444;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .toast-message {
+        .toast {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #4F46E5;
+            background: #333;
             color: white;
-            padding: 12px 24px;
+            padding: 15px 25px;
             border-radius: 30px;
-            font-size: 14px;
             font-weight: bold;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
             z-index: 1000;
-            animation: slideUp 0.3s ease;
+            animation: slideUp 0.3s;
         }
 
-        @media (max-width: 380px) {
-            .app-container {
-                padding: 14px;
-            }
-            .stats-grid {
-                gap: 8px;
-            }
-            .input-actions {
-                flex-direction: column;
-            }
+        @keyframes slideUp {
+            from { transform: translate(-50%, 20px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
         }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <h1>
-            <span>💰</span> Calculadora Financiera
-            <span id="connectionStatus" class="online-badge">📶 Online</span>
-        </h1>
+        <h1>💰 Calculadora Financiera</h1>
         
-        <!-- ===== ÚNICO BOTÓN DE INSTALACIÓN ===== -->
-        <div class="install-btn-container">
-            <button id="installButton">
-                <span>📲</span> INSTALAR APP EN TU DISPOSITIVO
-                <span>👇</span>
+        <!-- ===== BOTÓN DE INSTALACIÓN ===== -->
+        <div class="install-section">
+            <div class="install-title">📲 INSTALAR APLICACIÓN</div>
+            <button class="install-btn" onclick="forzarInstalacion()">
+                <span class="install-icon">📥</span>
+                TOCA AQUÍ PARA INSTALAR
+                <span class="install-icon">👇</span>
             </button>
+            <div class="install-subtitle">
+                Funciona sin internet después de instalar
+            </div>
         </div>
         
-        <div class="subtitle">
-            🙏 10% Dios | 🏠 50% Gastos | 📈 30% Reinversión | 🏦 20% Ahorro
+        <div class="input-group">
+            <label>📌 Nombre</label>
+            <input type="text" id="nombre" placeholder="Ej: Salario">
         </div>
-
-        <div class="current-calculation" id="currentCalculation">
-            <span>✨ Listo para calcular</span>
-            <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
+        
+        <div class="input-group">
+            <label>💰 Cantidad</label>
+            <input type="number" id="cantidad" placeholder="0.00">
         </div>
-
-        <div class="input-section">
-            <div class="input-group">
-                <label>📌 Nombre del ingreso</label>
-                <input type="text" id="incomeName" placeholder="Ej: Salario mensual">
-            </div>
-            <div class="input-group">
-                <label>💵 Cantidad ($)</label>
-                <input type="number" id="incomeAmount" placeholder="0.00" min="0" step="0.01">
-            </div>
-            <div class="input-actions">
-                <button class="add-btn" onclick="calculateAndSave()">
-                    <span>🧮</span> Calcular
-                </button>
-                <button class="clear-inputs-btn" onclick="clearInputFields()">
-                    <span>🔄</span> Limpiar
-                </button>
-            </div>
-        </div>
-
-        <div class="total-section">
-            <div class="total-label">💰 Total a distribuir</div>
-            <div class="total-value" id="totalAmount">$0.00</div>
-        </div>
-
-        <div class="stats-grid">
+        
+        <button class="calc-btn" onclick="calcular()">CALCULAR</button>
+        
+        <div class="total" id="total">$0.00</div>
+        
+        <div class="stats">
             <div class="stat-card dios">
-                <div class="stat-label">🙏 Dios</div>
-                <div class="stat-value" id="diosAmount">$0.00</div>
-                <div class="stat-sub">10% del total</div>
+                <div>🙏 Dios</div>
+                <div class="stat-value" id="dios">$0</div>
+                <div>10%</div>
             </div>
             <div class="stat-card gastos">
-                <div class="stat-label">🏠 Gastos</div>
-                <div class="stat-value" id="gastosAmount">$0.00</div>
-                <div class="stat-sub">50% restante</div>
+                <div>🏠 Gastos</div>
+                <div class="stat-value" id="gastos">$0</div>
+                <div>50%</div>
             </div>
             <div class="stat-card reinversion">
-                <div class="stat-label">📈 Reinversión</div>
-                <div class="stat-value" id="reinversionAmount">$0.00</div>
-                <div class="stat-sub">30% restante</div>
+                <div>📈 Reinversión</div>
+                <div class="stat-value" id="reinversion">$0</div>
+                <div>30%</div>
             </div>
             <div class="stat-card ahorro">
-                <div class="stat-label">🏦 Ahorro</div>
-                <div class="stat-value" id="ahorroAmount">$0.00</div>
-                <div class="stat-sub">20% restante</div>
+                <div>🏦 Ahorro</div>
+                <div class="stat-value" id="ahorro">$0</div>
+                <div>20%</div>
             </div>
         </div>
-
-        <div class="history-header">
-            <div class="history-title">
-                <span>📋</span> Historial
-            </div>
-            <div class="history-actions">
-                <button class="icon-btn favorite" onclick="showFavoritesOnly()">⭐</button>
-                <button class="icon-btn" onclick="clearHistory()">🗑️</button>
-            </div>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button style="flex:1; padding:10px; background:#FFD700; border:none; border-radius:10px;" onclick="mostrarFavoritos()">⭐ Favoritos</button>
+            <button style="flex:1; padding:10px; background:#ff4444; color:white; border:none; border-radius:10px;" onclick="borrarHistorial()">🗑️ Borrar</button>
         </div>
-
-        <div class="history-list" id="historyList">
-            <div class="empty-history">✨ No hay cálculos guardados</div>
-        </div>
-
-        <div class="footer">
-            ⭐ Favoritos permanecen • Funciona sin internet
-        </div>
+        
+        <div class="history" id="historial"></div>
+        <div style="text-align:center; margin-top:10px; color:#666; font-size:12px;">⭐ Favoritos permanecen</div>
     </div>
 
     <script>
         // ===== VARIABLES =====
-        let calculations = [];
-        let favorites = new Set();
-        let currentCalculation = { name: '', amount: 0, dios: 0, gastos: 0, reinversion: 0, ahorro: 0 };
-        let deferredPrompt;
-        const installButton = document.getElementById('installButton');
-        const connectionStatus = document.getElementById('connectionStatus');
-
-        // ===== DETECTAR CONEXIÓN =====
-        function updateConnectionStatus() {
-            connectionStatus.textContent = navigator.onLine ? '📶 Online' : '📴 Offline';
-            connectionStatus.className = navigator.onLine ? 'online-badge' : 'offline-badge';
+        let historial = [];
+        let favoritos = new Set();
+        
+        // ===== FUNCIÓN QUE FUERZA LA INSTALACIÓN =====
+        function forzarInstalacion() {
+            mostrarToast('📲 PREPARANDO INSTALACIÓN...');
+            
+            // MÉTODO 1: Intentar con beforeinstallprompt (estándar PWA)
+            if (window.deferredPrompt) {
+                window.deferredPrompt.prompt();
+                window.deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        mostrarToast('✅ App instalada correctamente');
+                        document.querySelector('.install-btn').innerHTML = '✓ APP INSTALADA ✓';
+                    } else {
+                        mostrarToast('❌ Instalación cancelada');
+                    }
+                    window.deferredPrompt = null;
+                });
+                return;
+            }
+            
+            // MÉTODO 2: Forzar instalación en Android
+            if (navigator.userAgent.match(/Android/i)) {
+                mostrarToast('📱 Abriendo menú de instalación...');
+                setTimeout(() => {
+                    if (confirm('¿Quieres instalar esta app?\n\nPresiona OK y luego busca "Instalar aplicación" en el menú ⋮')) {
+                        // Intentar abrir el menú de Chrome
+                        window.location.href = 'chrome://flags/#bypass-app-banner-engagement-checks';
+                        setTimeout(() => {
+                            mostrarToast('🔍 Busca "Instalar aplicación" en el menú ⋮');
+                        }, 1000);
+                    }
+                }, 500);
+                return;
+            }
+            
+            // MÉTODO 3: iOS - Instrucciones claras
+            if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+                mostrarToast('📱 SIGUE ESTOS PASOS:');
+                setTimeout(() => {
+                    alert('📲 PARA INSTALAR EN iPhone:\n\n1. Toca el botón Compartir 📤\n2. Desliza hacia abajo\n3. Toca "Agregar a Pantalla de Inicio"\n4. Confirma con "Agregar"');
+                }, 500);
+                return;
+            }
+            
+            // MÉTODO 4: PC / Otros
+            mostrarToast('💻 Busca el icono de instalación en la barra de direcciones');
         }
-        window.addEventListener('online', updateConnectionStatus);
-        window.addEventListener('offline', updateConnectionStatus);
-        updateConnectionStatus();
 
-        // ===== CAPTURAR EVENTO DE INSTALACIÓN =====
+        // ===== CAPTURAR EL EVENTO DE INSTALACIÓN =====
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
-            deferredPrompt = e;
+            window.deferredPrompt = e;
             console.log('✅ App lista para instalar');
         });
 
-        // ===== BOTÓN DE INSTALACIÓN =====
-        installButton.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                // Mostrar el cuadro de instalación del navegador
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                
-                if (outcome === 'accepted') {
-                    showToast('✅ App instalada correctamente');
-                    installButton.textContent = '📲 APP INSTALADA ✓';
-                    installButton.classList.add('installed');
-                    installButton.disabled = true;
-                } else {
-                    showToast('❌ Instalación cancelada');
-                }
-                deferredPrompt = null;
-            } else {
-                // Si no hay evento, intentar métodos alternativos
-                if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-                    showToast('📱 En iPhone: Safari → Compartir → Agregar a Pantalla de Inicio');
-                } else if (navigator.userAgent.match(/Android/i)) {
-                    showToast('📱 En Android: Chrome → Menú ⋮ → Instalar aplicación');
-                } else {
-                    showToast('💻 En PC: Busca el icono de instalar en la barra de direcciones');
-                }
-            }
-        });
-
-        // ===== DETECTAR SI YA ESTÁ INSTALADA =====
-        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-            installButton.textContent = '📲 APP INSTALADA ✓';
-            installButton.classList.add('installed');
-            installButton.disabled = true;
-        }
-
         // ===== REGISTRAR SERVICE WORKER =====
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(() => showToast('✅ App lista para usar offline'))
-                    .catch(() => showToast('⚠️ Modo offline no disponible'));
-            });
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.log('✅ Service Worker listo'))
+                .catch(err => console.log('❌ Error:', err));
         }
 
         // ===== FUNCIONES DE LA APP =====
-        function showToast(message) {
+        function mostrarToast(mensaje) {
             const toast = document.createElement('div');
-            toast.className = 'toast-message';
-            toast.textContent = message;
+            toast.className = 'toast';
+            toast.textContent = mensaje;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        function calculateAndSave() {
-            const name = document.getElementById('incomeName').value.trim();
-            const amount = parseFloat(document.getElementById('incomeAmount').value);
-
-            if (!name || isNaN(amount) || amount <= 0) {
-                alert('Ingresa nombre y cantidad válida');
+        function calcular() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const cantidad = parseFloat(document.getElementById('cantidad').value);
+            
+            if (!nombre || !cantidad || cantidad <= 0) {
+                alert('Completa todos los campos');
                 return;
             }
-
-            const dios = amount * 0.10;
-            const restante = amount - dios;
+            
+            const dios = cantidad * 0.10;
+            const restante = cantidad - dios;
             const gastos = restante * 0.50;
             const reinversion = restante * 0.30;
             const ahorro = restante * 0.20;
-
-            currentCalculation = { name, amount, dios, gastos, reinversion, ahorro };
-            updateDisplay();
-
-            calculations.push({
+            
+            document.getElementById('total').textContent = `$${cantidad.toFixed(2)}`;
+            document.getElementById('dios').textContent = `$${dios.toFixed(2)}`;
+            document.getElementById('gastos').textContent = `$${gastos.toFixed(2)}`;
+            document.getElementById('reinversion').textContent = `$${reinversion.toFixed(2)}`;
+            document.getElementById('ahorro').textContent = `$${ahorro.toFixed(2)}`;
+            
+            historial.unshift({
                 id: Date.now(),
-                name, amount,
-                date: new Date().toLocaleString(),
-                distribution: { dios, gastos, reinversion, ahorro }
+                nombre,
+                cantidad,
+                fecha: new Date().toLocaleString()
             });
-
-            saveToStorage();
-            updateHistory();
-            clearInputFields();
-            showToast('✅ Cálculo guardado');
-            document.getElementById('currentCalculation').innerHTML = `
-                <span>📊 ${name}: $${amount.toFixed(2)}</span>
-                <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
-            `;
+            
+            actualizarHistorial();
+            guardarDatos();
+            
+            document.getElementById('nombre').value = '';
+            document.getElementById('cantidad').value = '';
         }
 
-        function clearInputFields() {
-            document.getElementById('incomeName').value = '';
-            document.getElementById('incomeAmount').value = '';
-        }
-
-        function resetAll() {
-            clearInputFields();
-            currentCalculation = { name: '', amount: 0, dios: 0, gastos: 0, reinversion: 0, ahorro: 0 };
-            updateDisplay();
-            document.getElementById('currentCalculation').innerHTML = `
-                <span>✨ Listo para calcular</span>
-                <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
-            `;
-        }
-
-        function updateDisplay() {
-            document.getElementById('totalAmount').textContent = formatMoney(currentCalculation.amount);
-            document.getElementById('diosAmount').textContent = formatMoney(currentCalculation.dios);
-            document.getElementById('gastosAmount').textContent = formatMoney(currentCalculation.gastos);
-            document.getElementById('reinversionAmount').textContent = formatMoney(currentCalculation.reinversion);
-            document.getElementById('ahorroAmount').textContent = formatMoney(currentCalculation.ahorro);
-        }
-
-        function updateHistory(filterFavorites = false) {
-            const list = document.getElementById('historyList');
-            let items = filterFavorites ? calculations.filter(c => favorites.has(c.id)) : calculations;
-
-            if (items.length === 0) {
-                list.innerHTML = '<div class="empty-history">' + (filterFavorites ? '⭐ No hay favoritos' : '✨ No hay cálculos') + '</div>';
+        function actualizarHistorial() {
+            const lista = document.getElementById('historial');
+            if (historial.length === 0) {
+                lista.innerHTML = '<div style="text-align:center; color:#999; padding:20px;">✨ Sin cálculos</div>';
                 return;
             }
-
-            list.innerHTML = items.sort((a, b) => b.id - a.id).map(calc => `
-                <div class="history-item ${favorites.has(calc.id) ? 'favorite' : ''}" onclick="loadCalculation(${calc.id})">
-                    <div class="history-item-info">
-                        <h4>${escapeHtml(calc.name)}</h4>
-                        <p>${calc.date}</p>
+            
+            lista.innerHTML = historial.map(item => `
+                <div class="history-item" style="${favoritos.has(item.id) ? 'background:#fff9e6;' : ''}">
+                    <div>
+                        <strong>${item.nombre}</strong><br>
+                        <small>${item.fecha}</small>
                     </div>
-                    <div class="history-item-amount">${formatMoney(calc.amount)}</div>
-                    <div class="history-item-actions" onclick="event.stopPropagation()">
-                        <button class="fav-btn" onclick="toggleFavorite(${calc.id})">${favorites.has(calc.id) ? '⭐' : '☆'}</button>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <strong>$${item.cantidad.toFixed(2)}</strong>
+                        <button onclick="toggleFavorito(${item.id})" style="background:none; border:none; font-size:20px; cursor:pointer;">
+                            ${favoritos.has(item.id) ? '⭐' : '☆'}
+                        </button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function loadCalculation(id) {
-            const calc = calculations.find(c => c.id === id);
-            if (calc) {
-                currentCalculation = {
-                    name: calc.name, amount: calc.amount,
-                    dios: calc.distribution.dios, gastos: calc.distribution.gastos,
-                    reinversion: calc.distribution.reinversion, ahorro: calc.distribution.ahorro
-                };
-                updateDisplay();
-                document.getElementById('currentCalculation').innerHTML = `
-                    <span>📊 ${calc.name}: $${calc.amount.toFixed(2)}</span>
-                    <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
-                `;
+        function toggleFavorito(id) {
+            if (favoritos.has(id)) {
+                favoritos.delete(id);
+            } else {
+                favoritos.add(id);
+            }
+            actualizarHistorial();
+            guardarDatos();
+        }
+
+        function mostrarFavoritos() {
+            const favoritosArray = historial.filter(item => favoritos.has(item.id));
+            if (favoritosArray.length === 0) {
+                alert('⭐ No hay favoritos');
+                return;
+            }
+            
+            const lista = document.getElementById('historial');
+            lista.innerHTML = favoritosArray.map(item => `
+                <div class="history-item" style="background:#fff9e6;">
+                    <div>
+                        <strong>${item.nombre}</strong><br>
+                        <small>${item.fecha}</small>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <strong>$${item.cantidad.toFixed(2)}</strong>
+                        <button onclick="toggleFavorito(${item.id})" style="background:none; border:none; font-size:20px; cursor:pointer;">⭐</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function borrarHistorial() {
+            if (confirm('¿Borrar historial? Los favoritos permanecen')) {
+                historial = historial.filter(item => favoritos.has(item.id));
+                actualizarHistorial();
+                guardarDatos();
             }
         }
 
-        function toggleFavorite(id) {
-            favorites.has(id) ? favorites.delete(id) : favorites.add(id);
-            saveToStorage();
-            updateHistory();
+        function guardarDatos() {
+            localStorage.setItem('historial', JSON.stringify(historial));
+            localStorage.setItem('favoritos', JSON.stringify([...favoritos]));
         }
 
-        function showFavoritesOnly() {
-            updateHistory(true);
+        function cargarDatos() {
+            historial = JSON.parse(localStorage.getItem('historial')) || [];
+            favoritos = new Set(JSON.parse(localStorage.getItem('favoritos')) || []);
+            actualizarHistorial();
         }
 
-        function clearHistory() {
-            if (confirm('¿Borrar historial? Los favoritos permanecen.')) {
-                calculations = calculations.filter(calc => favorites.has(calc.id));
-                saveToStorage();
-                updateHistory();
-            }
-        }
-
-        function formatMoney(amount) {
-            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        }
-
-        function escapeHtml(unsafe) {
-            return unsafe.replace(/[&<>"']/g, function(m) {
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-            });
-        }
-
-        function saveToStorage() {
-            localStorage.setItem('calculations', JSON.stringify(calculations));
-            localStorage.setItem('favorites', JSON.stringify([...favorites]));
-        }
-
-        function loadFromStorage() {
-            calculations = JSON.parse(localStorage.getItem('calculations')) || [];
-            favorites = new Set(JSON.parse(localStorage.getItem('favorites')) || []);
-            updateHistory();
-        }
-
-        document.addEventListener('DOMContentLoaded', loadFromStorage);
+        cargarDatos();
     </script>
 </body>
 </html>
