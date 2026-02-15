@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Finanzas PWA - 10% Dios • 50/30/20</title>
     
-    <!-- Archivos PWA - Rutas relativas correctas para GitHub Pages -->
+    <!-- Archivos PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4F46E5">
     
     <!-- Iconos para iOS -->
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.png">
     
     <style>
-        /* ===== ESTILOS COMPLETOS ===== */
         * {
             margin: 0;
             padding: 0;
@@ -27,7 +24,6 @@
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            min-height: -webkit-fill-available;
             padding: 12px;
             display: flex;
             justify-content: center;
@@ -39,7 +35,6 @@
             width: 100%;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border-radius: 28px;
             padding: 18px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.25);
@@ -68,101 +63,57 @@
             flex-wrap: wrap;
         }
 
-        /* ===== BOTONES DE INSTALACIÓN MEJORADOS ===== */
+        /* ===== BOTÓN DE INSTALACIÓN ÚNICO ===== */
         .install-btn-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
+            margin: 15px 0;
         }
 
-        .install-btn {
-            background: linear-gradient(135deg, #00b09b, #96c93d);
+        #installButton {
+            background: linear-gradient(135deg, #FF416C, #FF4B2B);
             color: white;
             border: none;
-            padding: 15px 20px;
+            padding: 18px 20px;
             border-radius: 50px;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
+            gap: 12px;
+            box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
             transition: all 0.3s;
             width: 100%;
+            animation: pulse-install 2s infinite;
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
-        .install-btn:active {
+        @keyframes pulse-install {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 12px 30px rgba(255, 65, 108, 0.6);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
+            }
+        }
+
+        #installButton:active {
             transform: scale(0.98);
         }
 
-        .install-btn.hidden {
-            display: none;
+        #installButton.installed {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            animation: none;
+            box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
         }
 
-        /* Guía de instalación */
-        .install-guide {
-            background: white;
-            border-radius: 16px;
-            padding: 15px;
-            margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .install-guide.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .install-guide h3 {
-            color: #4F46E5;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .install-guide p {
-            color: #666;
-            margin-bottom: 8px;
-            font-size: 14px;
-            padding-left: 15px;
-            position: relative;
-        }
-
-        .install-guide p:before {
-            content: "•";
-            color: #4F46E5;
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-        }
-
-        .device-info {
-            background: #f8f9ff;
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 10px;
-            font-size: 13px;
-            color: #4F46E5;
-            text-align: center;
-        }
-
-        .offline-badge {
-            background: #ff4444;
-            color: white;
+        .offline-badge, .online-badge {
             padding: 4px 8px;
             border-radius: 12px;
             font-size: 10px;
@@ -172,10 +123,6 @@
         .online-badge {
             background: #00C851;
             color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            margin-left: 8px;
         }
 
         .subtitle {
@@ -183,9 +130,7 @@
             margin-bottom: 18px;
             font-size: clamp(12px, 3.5vw, 14px);
             line-height: 1.4;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            text-align: center;
         }
 
         .input-section {
@@ -193,12 +138,10 @@
             padding: 16px;
             border-radius: 20px;
             margin-bottom: 20px;
-            transition: all 0.3s ease;
         }
 
         .input-group {
             margin-bottom: 12px;
-            position: relative;
         }
 
         .input-group label {
@@ -244,9 +187,6 @@
             justify-content: center;
             gap: 6px;
             border: none;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
         }
 
         .add-btn {
@@ -263,12 +203,6 @@
 
         .add-btn:active {
             transform: scale(0.98);
-            background: linear-gradient(135deg, #4338CA, #6D28D9);
-        }
-
-        .clear-inputs-btn:active {
-            transform: scale(0.98);
-            background: #e0e0e0;
         }
 
         .total-section {
@@ -278,13 +212,6 @@
             border-radius: 20px;
             margin-bottom: 20px;
             text-align: center;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
-            50% { box-shadow: 0 4px 25px rgba(102, 126, 234, 0.6); }
-            100% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
         }
 
         .total-label {
@@ -296,7 +223,6 @@
             font-size: clamp(28px, 8vw, 36px);
             font-weight: bold;
             margin-top: 4px;
-            line-height: 1.2;
             word-break: break-word;
         }
 
@@ -312,14 +238,9 @@
             padding: 14px 10px;
             border-radius: 18px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: all 0.2s;
             min-height: 90px;
             display: flex;
             flex-direction: column;
-        }
-
-        .stat-card:active {
-            transform: scale(0.97);
         }
 
         .stat-card.dios {
@@ -346,16 +267,11 @@
             font-size: clamp(11px, 3vw, 13px);
             opacity: 0.9;
             margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .stat-value {
             font-size: clamp(16px, 5vw, 22px);
             font-weight: bold;
-            line-height: 1.2;
-            word-break: break-word;
             margin-bottom: 3px;
         }
 
@@ -370,8 +286,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 8px;
         }
 
         .history-title {
@@ -398,26 +312,12 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
             font-size: 22px;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        .icon-btn:active {
-            transform: scale(0.9);
-            background: #4F46E5;
-            color: white;
         }
 
         .icon-btn.favorite {
             background: #FFD700;
             color: white;
-        }
-
-        .icon-btn.favorite:active {
-            background: #FFA500;
         }
 
         .history-list {
@@ -426,7 +326,6 @@
             padding: 12px;
             max-height: 280px;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
         .history-item {
@@ -437,20 +336,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 8px;
             border-left: 5px solid #4F46E5;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
             cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .history-item:hover {
-            transform: translateX(5px);
-        }
-
-        .history-item:active {
-            background: #f0f0f0;
-            transform: scale(0.99);
         }
 
         .history-item.favorite {
@@ -461,7 +348,6 @@
         .history-item-info {
             flex: 1;
             min-width: 0;
-            pointer-events: none;
         }
 
         .history-item-info h4 {
@@ -476,9 +362,6 @@
         .history-item-info p {
             color: #666;
             font-size: clamp(10px, 3vw, 11px);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .history-item-amount {
@@ -486,13 +369,11 @@
             color: #4F46E5;
             font-size: clamp(14px, 4vw, 16px);
             white-space: nowrap;
-            pointer-events: none;
         }
 
         .history-item-actions {
             display: flex;
             gap: 4px;
-            pointer-events: auto;
         }
 
         .fav-btn {
@@ -501,28 +382,18 @@
             font-size: 24px;
             cursor: pointer;
             color: #FFD700;
-            transition: all 0.2s;
             width: 40px;
             height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        .fav-btn:active {
-            transform: scale(0.9);
-            background: rgba(255, 215, 0, 0.1);
         }
 
         .empty-history {
             text-align: center;
             color: #999;
             padding: 30px 15px;
-            font-size: clamp(13px, 4vw, 14px);
         }
 
         .footer {
@@ -530,7 +401,6 @@
             margin-top: 16px;
             color: #666;
             font-size: clamp(10px, 3vw, 11px);
-            padding: 5px;
         }
 
         .current-calculation {
@@ -543,7 +413,6 @@
             align-items: center;
             font-size: 14px;
             color: #0369a1;
-            font-weight: 500;
             border: 1px solid #bae6fd;
         }
 
@@ -556,13 +425,6 @@
             font-weight: bold;
             cursor: pointer;
             font-size: 13px;
-            transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
-        }
-
-        .reset-btn:active {
-            transform: scale(0.95);
-            background: #cc0000;
         }
 
         .toast-message {
@@ -581,86 +443,16 @@
             animation: slideUp 0.3s ease;
         }
 
-        .history-list::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .history-list::-webkit-scrollbar-track {
-            background: #e0e0e0;
-            border-radius: 4px;
-        }
-
-        .history-list::-webkit-scrollbar-thumb {
-            background: #4F46E5;
-            border-radius: 4px;
-        }
-
         @media (max-width: 380px) {
             .app-container {
                 padding: 14px;
             }
-            
             .stats-grid {
                 gap: 8px;
             }
-            
-            .stat-card {
-                padding: 12px 8px;
-                min-height: 80px;
-            }
-            
-            .history-item {
-                padding: 12px;
-            }
-            
-            .icon-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-            }
-            
             .input-actions {
                 flex-direction: column;
             }
-        }
-
-        @media (min-width: 600px) {
-            .app-container {
-                margin: 20px auto;
-            }
-            
-            .stats-grid {
-                gap: 15px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .history-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .history-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-            
-            .stat-value {
-                font-size: 15px;
-            }
-        }
-
-        @supports (padding: max(0px)) {
-            body {
-                padding-left: max(12px, env(safe-area-inset-left));
-                padding-right: max(12px, env(safe-area-inset-right));
-                padding-top: max(12px, env(safe-area-inset-top));
-                padding-bottom: max(12px, env(safe-area-inset-bottom));
-            }
-        }
-
-        button, .icon-btn, .fav-btn, .history-item {
-            touch-action: manipulation;
         }
     </style>
 </head>
@@ -671,26 +463,12 @@
             <span id="connectionStatus" class="online-badge">📶 Online</span>
         </h1>
         
-        <!-- ===== BOTONES DE INSTALACIÓN MEJORADOS ===== -->
+        <!-- ===== ÚNICO BOTÓN DE INSTALACIÓN ===== -->
         <div class="install-btn-container">
-            <button id="installButton" class="install-btn">
-                <span>📲</span> Instalar App en tu dispositivo
+            <button id="installButton">
+                <span>📲</span> INSTALAR APP EN TU DISPOSITIVO
+                <span>👇</span>
             </button>
-            <button id="manualInstallBtn" class="install-btn" style="background: linear-gradient(135deg, #FF6B6B, #FF4757);">
-                <span>📱</span> ¿Cómo instalar?
-            </button>
-        </div>
-
-        <!-- Guía de instalación (oculta inicialmente) -->
-        <div id="installGuide" class="install-guide">
-            <h3>📲 Cómo instalar esta app:</h3>
-            <p><strong>Android (Chrome):</strong> Menú ⋮ → "Instalar aplicación"</p>
-            <p><strong>iPhone (Safari):</strong> Compartir 📤 → "Agregar a pantalla de inicio"</p>
-            <p><strong>Computadora:</strong> Buscar icono de instalar 🔽 en la barra de direcciones</p>
-            <div id="deviceSpecificInfo" class="device-info">
-                Detectando tu dispositivo...
-            </div>
-            <p style="margin-top: 10px; color: #4F46E5; font-weight: bold;">✨ La app funciona offline una vez instalada</p>
         </div>
         
         <div class="subtitle">
@@ -705,18 +483,18 @@
         <div class="input-section">
             <div class="input-group">
                 <label>📌 Nombre del ingreso</label>
-                <input type="text" id="incomeName" placeholder="Ej: Salario mensual" inputmode="text" autocomplete="off">
+                <input type="text" id="incomeName" placeholder="Ej: Salario mensual">
             </div>
             <div class="input-group">
                 <label>💵 Cantidad ($)</label>
-                <input type="number" id="incomeAmount" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
+                <input type="number" id="incomeAmount" placeholder="0.00" min="0" step="0.01">
             </div>
             <div class="input-actions">
                 <button class="add-btn" onclick="calculateAndSave()">
                     <span>🧮</span> Calcular
                 </button>
                 <button class="clear-inputs-btn" onclick="clearInputFields()">
-                    <span>🔄</span> Limpiar campos
+                    <span>🔄</span> Limpiar
                 </button>
             </div>
         </div>
@@ -751,165 +529,107 @@
 
         <div class="history-header">
             <div class="history-title">
-                <span>📋</span> Historial de cálculos
+                <span>📋</span> Historial
             </div>
             <div class="history-actions">
-                <button class="icon-btn favorite" onclick="showFavoritesOnly()" title="Favoritos">
-                    ⭐
-                </button>
-                <button class="icon-btn" onclick="clearHistory()" title="Borrar historial">
-                    🗑️
-                </button>
+                <button class="icon-btn favorite" onclick="showFavoritesOnly()">⭐</button>
+                <button class="icon-btn" onclick="clearHistory()">🗑️</button>
             </div>
         </div>
 
         <div class="history-list" id="historyList">
-            <div class="empty-history">
-                ✨ No hay cálculos guardados
-            </div>
+            <div class="empty-history">✨ No hay cálculos guardados</div>
         </div>
 
         <div class="footer">
-            ⭐ Favoritos permanecen • Funciona sin internet • 📲 Toca "Instalar" para usar offline
+            ⭐ Favoritos permanecen • Funciona sin internet
         </div>
     </div>
 
     <script>
-        // ===== VARIABLES GLOBALES =====
+        // ===== VARIABLES =====
         let calculations = [];
         let favorites = new Set();
-        let currentCalculation = {
-            name: '',
-            amount: 0,
-            dios: 0,
-            gastos: 0,
-            reinversion: 0,
-            ahorro: 0
-        };
-
-        // Variables para PWA
+        let currentCalculation = { name: '', amount: 0, dios: 0, gastos: 0, reinversion: 0, ahorro: 0 };
         let deferredPrompt;
         const installButton = document.getElementById('installButton');
-        const manualInstallBtn = document.getElementById('manualInstallBtn');
         const connectionStatus = document.getElementById('connectionStatus');
 
         // ===== DETECTAR CONEXIÓN =====
         function updateConnectionStatus() {
-            if (navigator.onLine) {
-                connectionStatus.textContent = '📶 Online';
-                connectionStatus.className = 'online-badge';
-            } else {
-                connectionStatus.textContent = '📴 Offline';
-                connectionStatus.className = 'offline-badge';
-            }
+            connectionStatus.textContent = navigator.onLine ? '📶 Online' : '📴 Offline';
+            connectionStatus.className = navigator.onLine ? 'online-badge' : 'offline-badge';
         }
-
         window.addEventListener('online', updateConnectionStatus);
         window.addEventListener('offline', updateConnectionStatus);
         updateConnectionStatus();
 
-        // ===== DETECTAR DISPOSITIVO =====
-        function detectDevice() {
-            const ua = navigator.userAgent;
-            const deviceInfo = document.getElementById('deviceSpecificInfo');
-            
-            if (/android/i.test(ua)) {
-                deviceInfo.innerHTML = '📱 Dispositivo Android detectado<br>Usa Chrome y busca ⋮ → "Instalar aplicación"';
-            } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-                deviceInfo.innerHTML = '📱 Dispositivo iOS detectado<br>Usa Safari y toca Compartir 📤 → "Agregar a pantalla de inicio"';
-            } else {
-                deviceInfo.innerHTML = '💻 Computadora detectada<br>Busca el icono de instalar 🔽 en la barra de direcciones';
-            }
-        }
-
-        // ===== BOTÓN DE GUÍA MANUAL =====
-        manualInstallBtn.addEventListener('click', () => {
-            const guide = document.getElementById('installGuide');
-            guide.classList.toggle('show');
-            detectDevice();
-        });
-
-        // ===== EVENTO DE INSTALACIÓN PWA =====
+        // ===== CAPTURAR EVENTO DE INSTALACIÓN =====
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // El botón ya es visible, solo mostramos un mensaje
-            showToast('✅ Esta app se puede instalar!');
+            console.log('✅ App lista para instalar');
         });
 
-        // ===== ACCIÓN DEL BOTÓN DE INSTALACIÓN =====
+        // ===== BOTÓN DE INSTALACIÓN =====
         installButton.addEventListener('click', async () => {
             if (deferredPrompt) {
+                // Mostrar el cuadro de instalación del navegador
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
+                
                 if (outcome === 'accepted') {
                     showToast('✅ App instalada correctamente');
-                    installButton.style.display = 'none';
-                    manualInstallBtn.style.display = 'none';
+                    installButton.textContent = '📲 APP INSTALADA ✓';
+                    installButton.classList.add('installed');
+                    installButton.disabled = true;
+                } else {
+                    showToast('❌ Instalación cancelada');
                 }
                 deferredPrompt = null;
             } else {
-                // Si no hay evento, mostrar la guía
-                document.getElementById('installGuide').classList.add('show');
-                detectDevice();
-                showToast('📱 Sigue la guía de instalación manual');
+                // Si no hay evento, intentar métodos alternativos
+                if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+                    showToast('📱 En iPhone: Safari → Compartir → Agregar a Pantalla de Inicio');
+                } else if (navigator.userAgent.match(/Android/i)) {
+                    showToast('📱 En Android: Chrome → Menú ⋮ → Instalar aplicación');
+                } else {
+                    showToast('💻 En PC: Busca el icono de instalar en la barra de direcciones');
+                }
             }
         });
 
         // ===== DETECTAR SI YA ESTÁ INSTALADA =====
-        if (window.matchMedia('(display-mode: standalone)').matches || 
-            window.navigator.standalone === true) {
-            installButton.style.display = 'none';
-            manualInstallBtn.style.display = 'none';
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            installButton.textContent = '📲 APP INSTALADA ✓';
+            installButton.classList.add('installed');
+            installButton.disabled = true;
         }
 
         // ===== REGISTRAR SERVICE WORKER =====
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('service-worker.js')
-                    .then(registration => {
-                        console.log('✅ Service Worker registrado:', registration.scope);
-                        showToast('✅ App lista para usar offline');
-                    })
-                    .catch(error => {
-                        console.log('❌ Error al registrar Service Worker:', error);
-                        showToast('⚠️ Modo offline no disponible');
-                    });
+                    .then(() => showToast('✅ App lista para usar offline'))
+                    .catch(() => showToast('⚠️ Modo offline no disponible'));
             });
         }
 
-        // ===== CARGAR DATOS AL INICIAR =====
-        document.addEventListener('DOMContentLoaded', () => {
-            loadFromStorage();
-            startAutoCleanup();
-            
-            document.getElementById('incomeAmount').addEventListener('focus', function() {
-                this.style.fontSize = '16px';
-            });
-        });
-
-        // ===== FUNCIONES PRINCIPALES =====
+        // ===== FUNCIONES DE LA APP =====
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'toast-message';
             toast.textContent = message;
             document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 2000);
+            setTimeout(() => toast.remove(), 2000);
         }
 
         function calculateAndSave() {
-            const nameInput = document.getElementById('incomeName');
-            const amountInput = document.getElementById('incomeAmount');
-            
-            const name = nameInput.value.trim();
-            const amount = parseFloat(amountInput.value);
+            const name = document.getElementById('incomeName').value.trim();
+            const amount = parseFloat(document.getElementById('incomeAmount').value);
 
             if (!name || isNaN(amount) || amount <= 0) {
-                alert('Por favor ingresa un nombre válido y una cantidad mayor a 0');
-                amountInput.focus();
+                alert('Ingresa nombre y cantidad válida');
                 return;
             }
 
@@ -919,42 +639,20 @@
             const reinversion = restante * 0.30;
             const ahorro = restante * 0.20;
 
-            currentCalculation = {
-                name: name,
-                amount: amount,
-                dios: dios,
-                gastos: gastos,
-                reinversion: reinversion,
-                ahorro: ahorro
-            };
-
+            currentCalculation = { name, amount, dios, gastos, reinversion, ahorro };
             updateDisplay();
 
-            const calculation = {
+            calculations.push({
                 id: Date.now(),
-                name: name,
-                amount: amount,
+                name, amount,
                 date: new Date().toLocaleString(),
-                distribution: {
-                    dios: dios,
-                    gastos: gastos,
-                    reinversion: reinversion,
-                    ahorro: ahorro
-                }
-            };
-            
-            calculations.push(calculation);
+                distribution: { dios, gastos, reinversion, ahorro }
+            });
+
             saveToStorage();
             updateHistory();
-
             clearInputFields();
-
-            if (window.navigator && window.navigator.vibrate) {
-                window.navigator.vibrate(10);
-            }
-            
             showToast('✅ Cálculo guardado');
-
             document.getElementById('currentCalculation').innerHTML = `
                 <span>📊 ${name}: $${amount.toFixed(2)}</span>
                 <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
@@ -964,52 +662,16 @@
         function clearInputFields() {
             document.getElementById('incomeName').value = '';
             document.getElementById('incomeAmount').value = '';
-            document.getElementById('incomeName').focus();
         }
 
         function resetAll() {
             clearInputFields();
-            
-            currentCalculation = {
-                name: '',
-                amount: 0,
-                dios: 0,
-                gastos: 0,
-                reinversion: 0,
-                ahorro: 0
-            };
-            
+            currentCalculation = { name: '', amount: 0, dios: 0, gastos: 0, reinversion: 0, ahorro: 0 };
             updateDisplay();
-            
             document.getElementById('currentCalculation').innerHTML = `
                 <span>✨ Listo para calcular</span>
                 <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
             `;
-            
-            showToast('🧹 Todo reiniciado');
-        }
-
-        function loadCalculation(id) {
-            const calculation = calculations.find(c => c.id === id);
-            if (calculation) {
-                currentCalculation = {
-                    name: calculation.name,
-                    amount: calculation.amount,
-                    dios: calculation.distribution.dios,
-                    gastos: calculation.distribution.gastos,
-                    reinversion: calculation.distribution.reinversion,
-                    ahorro: calculation.distribution.ahorro
-                };
-                
-                updateDisplay();
-                
-                document.getElementById('currentCalculation').innerHTML = `
-                    <span>📊 ${calculation.name}: $${calculation.amount.toFixed(2)}</span>
-                    <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
-                `;
-                
-                showToast('📂 Cálculo cargado');
-            }
         }
 
         function updateDisplay() {
@@ -1021,140 +683,84 @@
         }
 
         function updateHistory(filterFavorites = false) {
-            const historyList = document.getElementById('historyList');
-            let itemsToShow = filterFavorites ? calculations.filter(c => favorites.has(c.id)) : calculations;
+            const list = document.getElementById('historyList');
+            let items = filterFavorites ? calculations.filter(c => favorites.has(c.id)) : calculations;
 
-            if (itemsToShow.length === 0) {
-                historyList.innerHTML = '<div class="empty-history">' + 
-                    (filterFavorites ? '⭐ No hay favoritos aún' : '✨ No hay cálculos guardados') + 
-                    '</div>';
+            if (items.length === 0) {
+                list.innerHTML = '<div class="empty-history">' + (filterFavorites ? '⭐ No hay favoritos' : '✨ No hay cálculos') + '</div>';
                 return;
             }
 
-            historyList.innerHTML = itemsToShow
-                .sort((a, b) => b.id - a.id)
-                .map(calc => `
-                    <div class="history-item ${favorites.has(calc.id) ? 'favorite' : ''}" onclick="loadCalculation(${calc.id})">
-                        <div class="history-item-info">
-                            <h4>${escapeHtml(calc.name)}</h4>
-                            <p>${calc.date}</p>
-                            <p style="font-size: 10px; color: #999;">
-                                🙏 $${calc.distribution.dios.toFixed(0)} | 🏠 $${calc.distribution.gastos.toFixed(0)} | 📈 $${calc.distribution.reinversion.toFixed(0)} | 🏦 $${calc.distribution.ahorro.toFixed(0)}
-                            </p>
-                        </div>
-                        <div class="history-item-amount">${formatMoney(calc.amount)}</div>
-                        <div class="history-item-actions" onclick="event.stopPropagation()">
-                            <button class="fav-btn" onclick="toggleFavorite(${calc.id})" title="${favorites.has(calc.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}">
-                                ${favorites.has(calc.id) ? '⭐' : '☆'}
-                            </button>
-                        </div>
+            list.innerHTML = items.sort((a, b) => b.id - a.id).map(calc => `
+                <div class="history-item ${favorites.has(calc.id) ? 'favorite' : ''}" onclick="loadCalculation(${calc.id})">
+                    <div class="history-item-info">
+                        <h4>${escapeHtml(calc.name)}</h4>
+                        <p>${calc.date}</p>
                     </div>
-                `).join('');
+                    <div class="history-item-amount">${formatMoney(calc.amount)}</div>
+                    <div class="history-item-actions" onclick="event.stopPropagation()">
+                        <button class="fav-btn" onclick="toggleFavorite(${calc.id})">${favorites.has(calc.id) ? '⭐' : '☆'}</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function escapeHtml(unsafe) {
-            return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+        function loadCalculation(id) {
+            const calc = calculations.find(c => c.id === id);
+            if (calc) {
+                currentCalculation = {
+                    name: calc.name, amount: calc.amount,
+                    dios: calc.distribution.dios, gastos: calc.distribution.gastos,
+                    reinversion: calc.distribution.reinversion, ahorro: calc.distribution.ahorro
+                };
+                updateDisplay();
+                document.getElementById('currentCalculation').innerHTML = `
+                    <span>📊 ${calc.name}: $${calc.amount.toFixed(2)}</span>
+                    <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
+                `;
+            }
         }
 
         function toggleFavorite(id) {
-            if (favorites.has(id)) {
-                favorites.delete(id);
-                showToast('⭐ Eliminado de favoritos');
-            } else {
-                favorites.add(id);
-                showToast('✨ Añadido a favoritos');
-            }
+            favorites.has(id) ? favorites.delete(id) : favorites.add(id);
             saveToStorage();
             updateHistory();
-            
-            const btn = event.target;
-            btn.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                btn.style.transform = 'scale(1)';
-            }, 200);
         }
 
         function showFavoritesOnly() {
             updateHistory(true);
-            showToast('⭐ Mostrando favoritos');
-            
-            const btn = event.target;
-            btn.style.backgroundColor = '#FFA500';
-            setTimeout(() => {
-                btn.style.backgroundColor = '#FFD700';
-            }, 200);
         }
 
         function clearHistory() {
-            if (confirm('¿Borrar todo el historial?\nLos elementos marcados como favoritos (⭐) permanecerán.')) {
+            if (confirm('¿Borrar historial? Los favoritos permanecen.')) {
                 calculations = calculations.filter(calc => favorites.has(calc.id));
                 saveToStorage();
                 updateHistory();
-                showToast('🗑️ Historial borrado');
-                
-                const btn = event.target;
-                btn.style.transform = 'rotate(20deg)';
-                setTimeout(() => {
-                    btn.style.transform = 'rotate(0deg)';
-                }, 200);
             }
-        }
-
-        function startAutoCleanup() {
-            setInterval(() => {
-                const oneHourAgo = Date.now() - (60 * 60 * 1000);
-                const beforeCount = calculations.length;
-                
-                calculations = calculations.filter(calc => 
-                    favorites.has(calc.id) || calc.id > oneHourAgo
-                );
-                
-                if (calculations.length !== beforeCount) {
-                    saveToStorage();
-                    updateHistory();
-                    showToast('🔄 Limpieza automática completada');
-                }
-            }, 60 * 60 * 1000);
         }
 
         function formatMoney(amount) {
             return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
 
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+            });
+        }
+
         function saveToStorage() {
-            try {
-                localStorage.setItem('calculations', JSON.stringify(calculations));
-                localStorage.setItem('favorites', JSON.stringify([...favorites]));
-            } catch (e) {
-                console.log('Error saving to storage', e);
-            }
+            localStorage.setItem('calculations', JSON.stringify(calculations));
+            localStorage.setItem('favorites', JSON.stringify([...favorites]));
         }
 
         function loadFromStorage() {
-            try {
-                const savedCalculations = localStorage.getItem('calculations');
-                const savedFavorites = localStorage.getItem('favorites');
-                
-                if (savedCalculations) {
-                    calculations = JSON.parse(savedCalculations);
-                }
-                
-                if (savedFavorites) {
-                    favorites = new Set(JSON.parse(savedFavorites));
-                }
-            } catch (e) {
-                console.log('Error loading from storage', e);
-                calculations = [];
-                favorites = new Set();
-            }
-            
+            calculations = JSON.parse(localStorage.getItem('calculations')) || [];
+            favorites = new Set(JSON.parse(localStorage.getItem('favorites')) || []);
             updateHistory();
         }
+
+        document.addEventListener('DOMContentLoaded', loadFromStorage);
     </script>
 </body>
 </html>
