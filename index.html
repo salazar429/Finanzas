@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Finanzas PWA</title>
+    <title>Finanzas PWA - 10% Dios • 50/30/20</title>
+    
+    <!-- Archivos PWA - Rutas relativas correctas para GitHub Pages -->
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
     <meta name="theme-color" content="#4F46E5">
+    
+    <!-- Iconos para iOS -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.png">
+    
     <style>
-        /* Mismos estilos que antes... */
+        /* ===== ESTILOS COMPLETOS (los mismos que funcionaban antes) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -38,7 +45,6 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.25);
             animation: slideUp 0.4s ease;
             margin: auto;
-            position: relative;
         }
 
         @keyframes slideUp {
@@ -611,7 +617,10 @@
             </button>
         </div>
         
-    
+        <div class="subtitle">
+            🙏 10% Dios | 🏠 50% Gastos | 📈 30% Reinversión | 🏦 20% Ahorro
+        </div>
+
         <div class="current-calculation" id="currentCalculation">
             <span>✨ Listo para calcular</span>
             <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
@@ -690,7 +699,7 @@
     </div>
 
     <script>
-        // Variables globales
+        // ===== VARIABLES GLOBALES =====
         let calculations = [];
         let favorites = new Set();
         let currentCalculation = {
@@ -707,7 +716,7 @@
         const installButton = document.getElementById('installButton');
         const connectionStatus = document.getElementById('connectionStatus');
 
-        // Detectar conexión
+        // ===== DETECTAR CONEXIÓN =====
         function updateConnectionStatus() {
             if (navigator.onLine) {
                 connectionStatus.textContent = '📶 Online';
@@ -722,7 +731,7 @@
         window.addEventListener('offline', updateConnectionStatus);
         updateConnectionStatus();
 
-        // Evento para instalar PWA
+        // ===== BOTÓN DE INSTALACIÓN PWA =====
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -746,7 +755,7 @@
             deferredPrompt = null;
         });
 
-        // Registrar Service Worker
+        // ===== REGISTRAR SERVICE WORKER =====
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('service-worker.js')
@@ -761,7 +770,7 @@
             });
         }
 
-        // Cargar datos al iniciar
+        // ===== CARGAR DATOS AL INICIAR =====
         document.addEventListener('DOMContentLoaded', () => {
             loadFromStorage();
             startAutoCleanup();
@@ -771,7 +780,7 @@
             });
         });
 
-        // Mostrar mensaje temporal
+        // ===== FUNCIONES PRINCIPALES =====
         function showToast(message) {
             const toast = document.createElement('div');
             toast.className = 'toast-message';
@@ -783,7 +792,6 @@
             }, 2000);
         }
 
-        // Función para calcular y guardar
         function calculateAndSave() {
             const nameInput = document.getElementById('incomeName');
             const amountInput = document.getElementById('incomeAmount');
@@ -797,14 +805,12 @@
                 return;
             }
 
-            // Calcular distribución
             const dios = amount * 0.10;
             const restante = amount - dios;
             const gastos = restante * 0.50;
             const reinversion = restante * 0.30;
             const ahorro = restante * 0.20;
 
-            // Actualizar cálculo actual
             currentCalculation = {
                 name: name,
                 amount: amount,
@@ -814,10 +820,8 @@
                 ahorro: ahorro
             };
 
-            // Mostrar en la interfaz
             updateDisplay();
 
-            // Guardar en el historial
             const calculation = {
                 id: Date.now(),
                 name: name,
@@ -835,36 +839,29 @@
             saveToStorage();
             updateHistory();
 
-            // LIMPIAR CAMPOS AUTOMÁTICAMENTE después de calcular
             clearInputFields();
 
-            // Feedback
             if (window.navigator && window.navigator.vibrate) {
                 window.navigator.vibrate(10);
             }
             
             showToast('✅ Cálculo guardado');
 
-            // Actualizar indicador
             document.getElementById('currentCalculation').innerHTML = `
                 <span>📊 ${name}: $${amount.toFixed(2)}</span>
                 <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
             `;
         }
 
-        // Limpiar solo los campos de entrada
         function clearInputFields() {
             document.getElementById('incomeName').value = '';
             document.getElementById('incomeAmount').value = '';
             document.getElementById('incomeName').focus();
         }
 
-        // Reiniciar todo (campos y cálculo actual)
         function resetAll() {
-            // Limpiar campos
             clearInputFields();
             
-            // Reiniciar cálculo actual
             currentCalculation = {
                 name: '',
                 amount: 0,
@@ -874,10 +871,8 @@
                 ahorro: 0
             };
             
-            // Actualizar interfaz
             updateDisplay();
             
-            // Actualizar indicador
             document.getElementById('currentCalculation').innerHTML = `
                 <span>✨ Listo para calcular</span>
                 <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
@@ -886,11 +881,9 @@
             showToast('🧹 Todo reiniciado');
         }
 
-        // Cargar cálculo del historial
         function loadCalculation(id) {
             const calculation = calculations.find(c => c.id === id);
             if (calculation) {
-                // Actualizar cálculo actual
                 currentCalculation = {
                     name: calculation.name,
                     amount: calculation.amount,
@@ -900,13 +893,8 @@
                     ahorro: calculation.distribution.ahorro
                 };
                 
-                // NO llenamos los campos para mantenerlos limpios
-                // Solo mostramos el cálculo
-                
-                // Actualizar interfaz
                 updateDisplay();
                 
-                // Actualizar indicador
                 document.getElementById('currentCalculation').innerHTML = `
                     <span>📊 ${calculation.name}: $${calculation.amount.toFixed(2)}</span>
                     <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
@@ -916,7 +904,6 @@
             }
         }
 
-        // Actualizar toda la interfaz
         function updateDisplay() {
             document.getElementById('totalAmount').textContent = formatMoney(currentCalculation.amount);
             document.getElementById('diosAmount').textContent = formatMoney(currentCalculation.dios);
@@ -925,7 +912,6 @@
             document.getElementById('ahorroAmount').textContent = formatMoney(currentCalculation.ahorro);
         }
 
-        // Mostrar historial
         function updateHistory(filterFavorites = false) {
             const historyList = document.getElementById('historyList');
             let itemsToShow = filterFavorites ? calculations.filter(c => favorites.has(c.id)) : calculations;
@@ -967,7 +953,6 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // Alternar favoritos
         function toggleFavorite(id) {
             if (favorites.has(id)) {
                 favorites.delete(id);
@@ -986,7 +971,6 @@
             }, 200);
         }
 
-        // Mostrar solo favoritos
         function showFavoritesOnly() {
             updateHistory(true);
             showToast('⭐ Mostrando favoritos');
@@ -998,7 +982,6 @@
             }, 200);
         }
 
-        // Borrar historial (excepto favoritos)
         function clearHistory() {
             if (confirm('¿Borrar todo el historial?\nLos elementos marcados como favoritos (⭐) permanecerán.')) {
                 calculations = calculations.filter(calc => favorites.has(calc.id));
@@ -1014,7 +997,6 @@
             }
         }
 
-        // Limpieza automática cada cierto tiempo
         function startAutoCleanup() {
             setInterval(() => {
                 const oneHourAgo = Date.now() - (60 * 60 * 1000);
@@ -1032,12 +1014,10 @@
             }, 60 * 60 * 1000);
         }
 
-        // Utilidades
         function formatMoney(amount) {
             return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
 
-        // Almacenamiento local
         function saveToStorage() {
             try {
                 localStorage.setItem('calculations', JSON.stringify(calculations));
