@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.png">
     
     <style>
-        /* ===== ESTILOS COMPLETOS (los mismos que funcionaban antes) ===== */
+        /* ===== ESTILOS COMPLETOS ===== */
         * {
             margin: 0;
             padding: 0;
@@ -68,9 +68,11 @@
             flex-wrap: wrap;
         }
 
+        /* ===== BOTONES DE INSTALACIÓN MEJORADOS ===== */
         .install-btn-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 15px;
         }
 
@@ -78,26 +80,84 @@
             background: linear-gradient(135deg, #00b09b, #96c93d);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 15px 20px;
             border-radius: 50px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
             box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
             transition: all 0.3s;
-            width: fit-content;
-            margin: 0 auto;
+            width: 100%;
         }
 
         .install-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.98);
         }
 
         .install-btn.hidden {
             display: none;
+        }
+
+        /* Guía de instalación */
+        .install-guide {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .install-guide.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .install-guide h3 {
+            color: #4F46E5;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .install-guide p {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 14px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .install-guide p:before {
+            content: "•";
+            color: #4F46E5;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .device-info {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #4F46E5;
+            text-align: center;
         }
 
         .offline-badge {
@@ -611,10 +671,26 @@
             <span id="connectionStatus" class="online-badge">📶 Online</span>
         </h1>
         
+        <!-- ===== BOTONES DE INSTALACIÓN MEJORADOS ===== -->
         <div class="install-btn-container">
-            <button id="installButton" class="install-btn hidden">
-                <span>📲</span> Instalar App
+            <button id="installButton" class="install-btn">
+                <span>📲</span> Instalar App en tu dispositivo
             </button>
+            <button id="manualInstallBtn" class="install-btn" style="background: linear-gradient(135deg, #FF6B6B, #FF4757);">
+                <span>📱</span> ¿Cómo instalar?
+            </button>
+        </div>
+
+        <!-- Guía de instalación (oculta inicialmente) -->
+        <div id="installGuide" class="install-guide">
+            <h3>📲 Cómo instalar esta app:</h3>
+            <p><strong>Android (Chrome):</strong> Menú ⋮ → "Instalar aplicación"</p>
+            <p><strong>iPhone (Safari):</strong> Compartir 📤 → "Agregar a pantalla de inicio"</p>
+            <p><strong>Computadora:</strong> Buscar icono de instalar 🔽 en la barra de direcciones</p>
+            <div id="deviceSpecificInfo" class="device-info">
+                Detectando tu dispositivo...
+            </div>
+            <p style="margin-top: 10px; color: #4F46E5; font-weight: bold;">✨ La app funciona offline una vez instalada</p>
         </div>
         
         <div class="subtitle">
@@ -714,6 +790,7 @@
         // Variables para PWA
         let deferredPrompt;
         const installButton = document.getElementById('installButton');
+        const manualInstallBtn = document.getElementById('manualInstallBtn');
         const connectionStatus = document.getElementById('connectionStatus');
 
         // ===== DETECTAR CONEXIÓN =====
@@ -731,29 +808,60 @@
         window.addEventListener('offline', updateConnectionStatus);
         updateConnectionStatus();
 
-        // ===== BOTÓN DE INSTALACIÓN PWA =====
+        // ===== DETECTAR DISPOSITIVO =====
+        function detectDevice() {
+            const ua = navigator.userAgent;
+            const deviceInfo = document.getElementById('deviceSpecificInfo');
+            
+            if (/android/i.test(ua)) {
+                deviceInfo.innerHTML = '📱 Dispositivo Android detectado<br>Usa Chrome y busca ⋮ → "Instalar aplicación"';
+            } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+                deviceInfo.innerHTML = '📱 Dispositivo iOS detectado<br>Usa Safari y toca Compartir 📤 → "Agregar a pantalla de inicio"';
+            } else {
+                deviceInfo.innerHTML = '💻 Computadora detectada<br>Busca el icono de instalar 🔽 en la barra de direcciones';
+            }
+        }
+
+        // ===== BOTÓN DE GUÍA MANUAL =====
+        manualInstallBtn.addEventListener('click', () => {
+            const guide = document.getElementById('installGuide');
+            guide.classList.toggle('show');
+            detectDevice();
+        });
+
+        // ===== EVENTO DE INSTALACIÓN PWA =====
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            installButton.classList.remove('hidden');
+            // El botón ya es visible, solo mostramos un mensaje
+            showToast('✅ Esta app se puede instalar!');
         });
 
+        // ===== ACCIÓN DEL BOTÓN DE INSTALACIÓN =====
         installButton.addEventListener('click', async () => {
-            if (!deferredPrompt) {
-                showToast('❌ Ya está instalada o no es compatible');
-                return;
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showToast('✅ App instalada correctamente');
+                    installButton.style.display = 'none';
+                    manualInstallBtn.style.display = 'none';
+                }
+                deferredPrompt = null;
+            } else {
+                // Si no hay evento, mostrar la guía
+                document.getElementById('installGuide').classList.add('show');
+                detectDevice();
+                showToast('📱 Sigue la guía de instalación manual');
             }
-            
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            
-            if (outcome === 'accepted') {
-                showToast('✅ App instalada correctamente');
-                installButton.classList.add('hidden');
-            }
-            
-            deferredPrompt = null;
         });
+
+        // ===== DETECTAR SI YA ESTÁ INSTALADA =====
+        if (window.matchMedia('(display-mode: standalone)').matches || 
+            window.navigator.standalone === true) {
+            installButton.style.display = 'none';
+            manualInstallBtn.style.display = 'none';
+        }
 
         // ===== REGISTRAR SERVICE WORKER =====
         if ('serviceWorker' in navigator) {
