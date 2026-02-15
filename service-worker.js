@@ -13,7 +13,6 @@ const urlsToCache = [
   '/Finanzas/icons/icon-512x512.png'
 ];
 
-// Instalación del Service Worker
 self.addEventListener('install', event => {
   console.log('✅ Service Worker instalándose...');
   event.waitUntil(
@@ -26,7 +25,6 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activación del Service Worker
 self.addEventListener('activate', event => {
   console.log('✅ Service Worker activado');
   event.waitUntil(
@@ -43,35 +41,24 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Interceptar peticiones y servir desde caché
 self.addEventListener('fetch', event => {
-  console.log('🌐 Petición a:', event.request.url);
-  
   event.respondWith(
     caches.match(event.request)
       .then(response => {
         if (response) {
-          console.log('✅ Desde caché:', event.request.url);
           return response;
         }
-
-        console.log('🌐 Desde red:', event.request.url);
         return fetch(event.request)
           .then(response => {
             if(!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
-
             const responseToCache = response.clone();
             caches.open(CACHE_NAME)
               .then(cache => {
                 cache.put(event.request, responseToCache);
               });
-
             return response;
-          })
-          .catch(error => {
-            console.log('❌ Error en fetch:', error);
           });
       })
   );
