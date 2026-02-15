@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Finanzas PWA - 10% Dios • 50/30/20</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="theme-color" content="#4F46E5">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .app-container {
+            max-width: 450px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 18px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            animation: slideUp 0.4s ease;
+            margin: auto;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #4F46E5;
+            font-size: clamp(20px, 6vw, 24px);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 18px;
+            font-size: clamp(12px, 3.5vw, 14px);
+            line-height: 1.4;
+        }
+
+        .input-section {
+            background: #f8f9ff;
+            padding: 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .input-section:has(input:focus) {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 4px;
+            color: #4F46E5;
+            font-weight: 600;
+            font-size: clamp(12px, 3.5vw, 14px);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            font-size: 16px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .add-btn, .clear-inputs-btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: clamp(14px, 4vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            color: white;
+            flex: 2;
+        }
+
+        .clear-inputs-btn {
+            background: #f0f0f0;
+            color: #666;
+            flex: 1;
+        }
+
+        .add-btn:active {
+            transform: scale(0.98);
+            background: linear-gradient(135deg, #4338CA, #6D28D9);
+        }
+
+        .clear-inputs-btn:active {
+            transform: scale(0.98);
+            background: #e0e0e0;
+        }
+
+        .total-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(102, 126, 234, 0.6); }
+            100% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); }
+        }
+
+        .total-label {
+            font-size: clamp(13px, 4vw, 15px);
+            opacity: 0.9;
+        }
+
+        .total-value {
+            font-size: clamp(28px, 8vw, 36px);
+            font-weight: bold;
+            margin-top: 4px;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 14px 10px;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-card:active {
+            transform: scale(0.97);
+        }
+
+        .stat-card.dios {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+        }
+
+        .stat-card.gastos {
+            background: linear-gradient(135deg, #FF6B6B, #FF4757);
+            color: white;
+        }
+
+        .stat-card.reinversion {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            color: white;
+        }
+
+        .stat-card.ahorro {
+            background: linear-gradient(135deg, #00B894, #00A884);
+            color: white;
+        }
+
+        .stat-label {
+            font-size: clamp(11px, 3vw, 13px);
+            opacity: 0.9;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stat-value {
+            font-size: clamp(16px, 5vw, 22px);
+            font-weight: bold;
+            line-height: 1.2;
+            word-break: break-word;
+            margin-bottom: 3px;
+        }
+
+        .stat-sub {
+            font-size: clamp(9px, 2.5vw, 11px);
+            opacity: 0.8;
+            margin-top: auto;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .history-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #4F46E5;
+            font-weight: bold;
+            font-size: clamp(14px, 4vw, 16px);
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: #f0f0f0;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 22px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.9);
+            background: #4F46E5;
+            color: white;
+        }
+
+        .icon-btn.favorite {
+            background: #FFD700;
+            color: white;
+        }
+
+        .icon-btn.favorite:active {
+            background: #FFA500;
+        }
+
+        .history-list {
+            background: #f8f9ff;
+            border-radius: 20px;
+            padding: 12px;
+            max-height: 280px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .history-item {
+            background: white;
+            padding: 14px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            border-left: 5px solid #4F46E5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            transform: translateX(5px);
+        }
+
+        .history-item:active {
+            background: #f0f0f0;
+            transform: scale(0.99);
+        }
+
+        .history-item.favorite {
+            border-left-color: #FFD700;
+            background: #fff9e6;
+        }
+
+        .history-item-info {
+            flex: 1;
+            min-width: 0;
+            pointer-events: none;
+        }
+
+        .history-item-info h4 {
+            color: #333;
+            font-size: clamp(14px, 4vw, 16px);
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-item-info p {
+            color: #666;
+            font-size: clamp(10px, 3vw, 11px);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-item-amount {
+            font-weight: bold;
+            color: #4F46E5;
+            font-size: clamp(14px, 4vw, 16px);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .history-item-actions {
+            display: flex;
+            gap: 4px;
+            pointer-events: auto;
+        }
+
+        .fav-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #FFD700;
+            transition: all 0.2s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .fav-btn:active {
+            transform: scale(0.9);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .empty-history {
+            text-align: center;
+            color: #999;
+            padding: 30px 15px;
+            font-size: clamp(13px, 4vw, 14px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 16px;
+            color: #666;
+            font-size: clamp(10px, 3vw, 11px);
+            padding: 5px;
+        }
+
+        .current-calculation {
+            background: linear-gradient(135deg, #e8f4fd, #dbeafe);
+            padding: 12px 15px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #0369a1;
+            font-weight: 500;
+            border: 1px solid #bae6fd;
+        }
+
+        .reset-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+        }
+
+        .reset-btn:active {
+            transform: scale(0.95);
+            background: #cc0000;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4F46E5;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+        }
+
+        .history-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .history-list::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb {
+            background: #4F46E5;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 380px) {
+            .app-container {
+                padding: 14px;
+            }
+            
+            .stats-grid {
+                gap: 8px;
+            }
+            
+            .stat-card {
+                padding: 12px 8px;
+                min-height: 80px;
+            }
+            
+            .history-item {
+                padding: 12px;
+            }
+            
+            .icon-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .input-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (min-width: 600px) {
+            .app-container {
+                margin: 20px auto;
+            }
+            
+            .stats-grid {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .history-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .history-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .stat-value {
+                font-size: 15px;
+            }
+        }
+
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+                padding-top: max(12px, env(safe-area-inset-top));
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+            }
+        }
+
+        button, .icon-btn, .fav-btn, .history-item {
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1>
+            <span>💰</span> Calculadora Financiera
+        </h1>
+        <div class="subtitle">
+            🙏 10% Dios | 🏠 50% Gastos | 📈 30% Reinversión | 🏦 20% Ahorro
+        </div>
+
+        <div class="current-calculation" id="currentCalculation">
+            <span>✨ Listo para calcular</span>
+            <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label>📌 Nombre del ingreso</label>
+                <input type="text" id="incomeName" placeholder="Ej: Salario mensual" inputmode="text" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>💵 Cantidad ($)</label>
+                <input type="number" id="incomeAmount" placeholder="0.00" min="0" step="0.01" inputmode="decimal">
+            </div>
+            <div class="input-actions">
+                <button class="add-btn" onclick="calculateAndSave()">
+                    <span>🧮</span> Calcular
+                </button>
+                <button class="clear-inputs-btn" onclick="clearInputFields()">
+                    <span>🔄</span> Limpiar campos
+                </button>
+            </div>
+        </div>
+
+        <div class="total-section">
+            <div class="total-label">💰 Total a distribuir</div>
+            <div class="total-value" id="totalAmount">$0.00</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card dios">
+                <div class="stat-label">🙏 Dios</div>
+                <div class="stat-value" id="diosAmount">$0.00</div>
+                <div class="stat-sub">10% del total</div>
+            </div>
+            <div class="stat-card gastos">
+                <div class="stat-label">🏠 Gastos</div>
+                <div class="stat-value" id="gastosAmount">$0.00</div>
+                <div class="stat-sub">50% restante</div>
+            </div>
+            <div class="stat-card reinversion">
+                <div class="stat-label">📈 Reinversión</div>
+                <div class="stat-value" id="reinversionAmount">$0.00</div>
+                <div class="stat-sub">30% restante</div>
+            </div>
+            <div class="stat-card ahorro">
+                <div class="stat-label">🏦 Ahorro</div>
+                <div class="stat-value" id="ahorroAmount">$0.00</div>
+                <div class="stat-sub">20% restante</div>
+            </div>
+        </div>
+
+        <div class="history-header">
+            <div class="history-title">
+                <span>📋</span> Historial de cálculos
+            </div>
+            <div class="history-actions">
+                <button class="icon-btn favorite" onclick="showFavoritesOnly()" title="Favoritos">
+                    ⭐
+                </button>
+                <button class="icon-btn" onclick="clearHistory()" title="Borrar historial">
+                    🗑️
+                </button>
+            </div>
+        </div>
+
+        <div class="history-list" id="historyList">
+            <div class="empty-history">
+                ✨ No hay cálculos guardados
+            </div>
+        </div>
+
+        <div class="footer">
+            ⭐ Favoritos permanecen • Los campos se limpian automáticamente
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let calculations = [];
+        let favorites = new Set();
+        let currentCalculation = {
+            name: '',
+            amount: 0,
+            dios: 0,
+            gastos: 0,
+            reinversion: 0,
+            ahorro: 0
+        };
+
+        // Cargar datos al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFromStorage();
+            startAutoCleanup();
+            
+            document.getElementById('incomeAmount').addEventListener('focus', function() {
+                this.style.fontSize = '16px';
+            });
+        });
+
+        // Mostrar mensaje temporal
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2000);
+        }
+
+        // Función para calcular y guardar
+        function calculateAndSave() {
+            const nameInput = document.getElementById('incomeName');
+            const amountInput = document.getElementById('incomeAmount');
+            
+            const name = nameInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+
+            if (!name || isNaN(amount) || amount <= 0) {
+                alert('Por favor ingresa un nombre válido y una cantidad mayor a 0');
+                amountInput.focus();
+                return;
+            }
+
+            // Calcular distribución
+            const dios = amount * 0.10;
+            const restante = amount - dios;
+            const gastos = restante * 0.50;
+            const reinversion = restante * 0.30;
+            const ahorro = restante * 0.20;
+
+            // Actualizar cálculo actual
+            currentCalculation = {
+                name: name,
+                amount: amount,
+                dios: dios,
+                gastos: gastos,
+                reinversion: reinversion,
+                ahorro: ahorro
+            };
+
+            // Mostrar en la interfaz
+            updateDisplay();
+
+            // Guardar en el historial
+            const calculation = {
+                id: Date.now(),
+                name: name,
+                amount: amount,
+                date: new Date().toLocaleString(),
+                distribution: {
+                    dios: dios,
+                    gastos: gastos,
+                    reinversion: reinversion,
+                    ahorro: ahorro
+                }
+            };
+            
+            calculations.push(calculation);
+            saveToStorage();
+            updateHistory();
+
+            // LIMPIAR CAMPOS AUTOMÁTICAMENTE después de calcular
+            clearInputFields();
+
+            // Feedback
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(10);
+            }
+            
+            showToast('✅ Cálculo guardado');
+
+            // Actualizar indicador
+            document.getElementById('currentCalculation').innerHTML = `
+                <span>📊 ${name}: $${amount.toFixed(2)}</span>
+                <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
+            `;
+        }
+
+        // Limpiar solo los campos de entrada
+        function clearInputFields() {
+            document.getElementById('incomeName').value = '';
+            document.getElementById('incomeAmount').value = '';
+            document.getElementById('incomeName').focus();
+        }
+
+        // Reiniciar todo (campos y cálculo actual)
+        function resetAll() {
+            // Limpiar campos
+            clearInputFields();
+            
+            // Reiniciar cálculo actual
+            currentCalculation = {
+                name: '',
+                amount: 0,
+                dios: 0,
+                gastos: 0,
+                reinversion: 0,
+                ahorro: 0
+            };
+            
+            // Actualizar interfaz
+            updateDisplay();
+            
+            // Actualizar indicador
+            document.getElementById('currentCalculation').innerHTML = `
+                <span>✨ Listo para calcular</span>
+                <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
+            `;
+            
+            showToast('🧹 Todo reiniciado');
+        }
+
+        // Cargar cálculo del historial
+        function loadCalculation(id) {
+            const calculation = calculations.find(c => c.id === id);
+            if (calculation) {
+                // Actualizar cálculo actual
+                currentCalculation = {
+                    name: calculation.name,
+                    amount: calculation.amount,
+                    dios: calculation.distribution.dios,
+                    gastos: calculation.distribution.gastos,
+                    reinversion: calculation.distribution.reinversion,
+                    ahorro: calculation.distribution.ahorro
+                };
+                
+                // NO llenamos los campos para mantenerlos limpios
+                // Solo mostramos el cálculo
+                
+                // Actualizar interfaz
+                updateDisplay();
+                
+                // Actualizar indicador
+                document.getElementById('currentCalculation').innerHTML = `
+                    <span>📊 ${calculation.name}: $${calculation.amount.toFixed(2)}</span>
+                    <button class="reset-btn" onclick="resetAll()">🔄 Empezar de cero</button>
+                `;
+                
+                showToast('📂 Cálculo cargado');
+            }
+        }
+
+        // Actualizar toda la interfaz
+        function updateDisplay() {
+            document.getElementById('totalAmount').textContent = formatMoney(currentCalculation.amount);
+            document.getElementById('diosAmount').textContent = formatMoney(currentCalculation.dios);
+            document.getElementById('gastosAmount').textContent = formatMoney(currentCalculation.gastos);
+            document.getElementById('reinversionAmount').textContent = formatMoney(currentCalculation.reinversion);
+            document.getElementById('ahorroAmount').textContent = formatMoney(currentCalculation.ahorro);
+        }
+
+        // Mostrar historial
+        function updateHistory(filterFavorites = false) {
+            const historyList = document.getElementById('historyList');
+            let itemsToShow = filterFavorites ? calculations.filter(c => favorites.has(c.id)) : calculations;
+
+            if (itemsToShow.length === 0) {
+                historyList.innerHTML = '<div class="empty-history">' + 
+                    (filterFavorites ? '⭐ No hay favoritos aún' : '✨ No hay cálculos guardados') + 
+                    '</div>';
+                return;
+            }
+
+            historyList.innerHTML = itemsToShow
+                .sort((a, b) => b.id - a.id)
+                .map(calc => `
+                    <div class="history-item ${favorites.has(calc.id) ? 'favorite' : ''}" onclick="loadCalculation(${calc.id})">
+                        <div class="history-item-info">
+                            <h4>${escapeHtml(calc.name)}</h4>
+                            <p>${calc.date}</p>
+                            <p style="font-size: 10px; color: #999;">
+                                🙏 $${calc.distribution.dios.toFixed(0)} | 🏠 $${calc.distribution.gastos.toFixed(0)} | 📈 $${calc.distribution.reinversion.toFixed(0)} | 🏦 $${calc.distribution.ahorro.toFixed(0)}
+                            </p>
+                        </div>
+                        <div class="history-item-amount">${formatMoney(calc.amount)}</div>
+                        <div class="history-item-actions" onclick="event.stopPropagation()">
+                            <button class="fav-btn" onclick="toggleFavorite(${calc.id})" title="${favorites.has(calc.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}">
+                                ${favorites.has(calc.id) ? '⭐' : '☆'}
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Alternar favoritos
+        function toggleFavorite(id) {
+            if (favorites.has(id)) {
+                favorites.delete(id);
+                showToast('⭐ Eliminado de favoritos');
+            } else {
+                favorites.add(id);
+                showToast('✨ Añadido a favoritos');
+            }
+            saveToStorage();
+            updateHistory();
+            
+            const btn = event.target;
+            btn.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Mostrar solo favoritos
+        function showFavoritesOnly() {
+            updateHistory(true);
+            showToast('⭐ Mostrando favoritos');
+            
+            const btn = event.target;
+            btn.style.backgroundColor = '#FFA500';
+            setTimeout(() => {
+                btn.style.backgroundColor = '#FFD700';
+            }, 200);
+        }
+
+        // Borrar historial (excepto favoritos)
+        function clearHistory() {
+            if (confirm('¿Borrar todo el historial?\nLos elementos marcados como favoritos (⭐) permanecerán.')) {
+                calculations = calculations.filter(calc => favorites.has(calc.id));
+                saveToStorage();
+                updateHistory();
+                showToast('🗑️ Historial borrado');
+                
+                const btn = event.target;
+                btn.style.transform = 'rotate(20deg)';
+                setTimeout(() => {
+                    btn.style.transform = 'rotate(0deg)';
+                }, 200);
+            }
+        }
+
+        // Limpieza automática cada cierto tiempo
+        function startAutoCleanup() {
+            setInterval(() => {
+                const oneHourAgo = Date.now() - (60 * 60 * 1000);
+                const beforeCount = calculations.length;
+                
+                calculations = calculations.filter(calc => 
+                    favorites.has(calc.id) || calc.id > oneHourAgo
+                );
+                
+                if (calculations.length !== beforeCount) {
+                    saveToStorage();
+                    updateHistory();
+                    showToast('🔄 Limpieza automática completada');
+                }
+            }, 60 * 60 * 1000);
+        }
+
+        // Utilidades
+        function formatMoney(amount) {
+            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        // Almacenamiento local
+        function saveToStorage() {
+            try {
+                localStorage.setItem('calculations', JSON.stringify(calculations));
+                localStorage.setItem('favorites', JSON.stringify([...favorites]));
+            } catch (e) {
+                console.log('Error saving to storage', e);
+            }
+        }
+
+        function loadFromStorage() {
+            try {
+                const savedCalculations = localStorage.getItem('calculations');
+                const savedFavorites = localStorage.getItem('favorites');
+                
+                if (savedCalculations) {
+                    calculations = JSON.parse(savedCalculations);
+                }
+                
+                if (savedFavorites) {
+                    favorites = new Set(JSON.parse(savedFavorites));
+                }
+            } catch (e) {
+                console.log('Error loading from storage', e);
+                calculations = [];
+                favorites = new Set();
+            }
+            
+            updateHistory();
+        }
+    </script>
+</body>
+</html>
